@@ -4,6 +4,7 @@ import objects.Members;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class DataModel {
 
@@ -17,7 +18,7 @@ public class DataModel {
     static ArrayList<String> recurringTaskType = new ArrayList<>();
 
     static ArrayList<String> configurations = new ArrayList<>();
-    static HashMap<String, ArrayList<String>> typeOfUser = new HashMap<>();
+    static LinkedHashMap<String, ArrayList<String>> typeOfUser = new LinkedHashMap<>();
 
 
     static public ArrayList<Members> getMembersArrayList() {
@@ -132,6 +133,7 @@ public class DataModel {
     }
 
     public static void setConfigurations() {
+        configurations.add("Add Users to Organisation");
         configurations.add("Create Projects");
         configurations.add("Update Projects");
         configurations.add("Create Tasks");
@@ -140,7 +142,6 @@ public class DataModel {
         configurations.add("Create Issues");
         configurations.add("Update Issues");
         configurations.add("Test");
-        configurations.add("Update Deployment Status");
         configurations.add("Create Milestones");
         configurations.add("Update Milestones");
     }
@@ -153,17 +154,23 @@ public class DataModel {
         typeOfUser.put("Manager", getConfigurations());
 
         ArrayList<String> teamlead = new ArrayList<>();
-        teamlead.add(getConfigurations().get(2));
         teamlead.add(getConfigurations().get(3));
         teamlead.add(getConfigurations().get(4));
         teamlead.add(getConfigurations().get(5));
         teamlead.add(getConfigurations().get(6));
-        teamlead.add(getConfigurations().get(9));
+        teamlead.add(getConfigurations().get(7));
         teamlead.add(getConfigurations().get(10));
         typeOfUser.put("Teamlead", teamlead);
 
+        ArrayList<String> tester = new ArrayList<>();
+        tester.add(getConfigurations().get(6));
+        tester.add(getConfigurations().get(7));
+        tester.add(getConfigurations().get(8));
+        typeOfUser.put("Tester", tester);
+
         ArrayList<String> member = new ArrayList<>();
-        member.add(getConfigurations().get(3));
+        member.add(getConfigurations().get(4));
+        member.add(getConfigurations().get(7));
         typeOfUser.put("Member", member);
     }
 }
