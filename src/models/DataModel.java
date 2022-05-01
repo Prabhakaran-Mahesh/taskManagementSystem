@@ -138,9 +138,11 @@ public class DataModel {
         configurations.add("Update Projects");
         configurations.add("Create Tasks");
         configurations.add("Update Tasks");
+        configurations.add("Update Tasks Status");
         configurations.add("Delete Tasks");
         configurations.add("Create Issues");
         configurations.add("Update Issues");
+        configurations.add("Update Issues Status");
         configurations.add("Test");
         configurations.add("Create Milestones");
         configurations.add("Update Milestones");
@@ -159,18 +161,23 @@ public class DataModel {
         teamlead.add(getConfigurations().get(5));
         teamlead.add(getConfigurations().get(6));
         teamlead.add(getConfigurations().get(7));
-        teamlead.add(getConfigurations().get(10));
+        teamlead.add(getConfigurations().get(8));
+        teamlead.add(getConfigurations().get(9));
+        teamlead.add(getConfigurations().get(11));
+        teamlead.add(getConfigurations().get(12));
         typeOfUser.put("Teamlead", teamlead);
 
         ArrayList<String> tester = new ArrayList<>();
-        tester.add(getConfigurations().get(6));
+        tester.add(getConfigurations().get(5));
         tester.add(getConfigurations().get(7));
         tester.add(getConfigurations().get(8));
+        tester.add(getConfigurations().get(9));
+        tester.add(getConfigurations().get(10));
         typeOfUser.put("Tester", tester);
 
         ArrayList<String> member = new ArrayList<>();
-        member.add(getConfigurations().get(4));
-        member.add(getConfigurations().get(7));
+        member.add(getConfigurations().get(5));
+        member.add(getConfigurations().get(9));
         typeOfUser.put("Member", member);
     }
 }
