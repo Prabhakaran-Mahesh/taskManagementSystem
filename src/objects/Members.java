@@ -1368,6 +1368,87 @@ public class Members {
         }
 
     }
+    public void deleteTask() {
+        System.out.println();
+        DesignModel.printLine();
+
+        System.out.println("\t\tView the Project tasks");
+        System.out.println();
+
+        if (projectArrayList.size() == 0) {
+            System.out.print("\t\tNo Projects found!\n");
+            DesignModel.printLine();
+        } else {
+            int choice;
+            if (projectArrayList.size() == 1) {
+                choice = 1;
+            } else {
+                System.out.printf("\n\t\t%15s %15s %15s %25s %35s\n", "S.no", "ProjectName", "Deadline", "Status", "Description");
+                int i = 0;
+                for (Project project : projectArrayList) {
+
+                    i++;
+                    System.out.printf("\t\t%15s %15s %15s %25s %35s\n", i, project.getProjectName(), project.getDeadline(), project.getStatus(), project.getProjectDescription());
+                }
+                DesignModel.printLine();
+
+
+                while (true) {
+                    System.out.print("\n\t\tEnter the s.no of the Project which you want to View Tasks : ");
+                    choice = Validation.numberCheck(scanner);
+                    if (choice > 0 && choice <= projectArrayList.size()) {
+                        break;
+                    } else {
+                        System.out.println("\t\tWrong input");
+                    }
+                }
+            }
+
+            Project selectedProject = projectArrayList.get(choice - 1);
+
+            if (selectedProject.getTaskArrayList().size() == 0) {
+                System.out.println("\t\t\tNo task is created yet!");
+            } else {
+                int i = 0;
+                System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
+                for (Task task : selectedProject.getTaskArrayList()) {
+                    i++;
+                    System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                }
+
+                DesignModel.printLine();
+            }
+
+            while(true){
+                if(selectedProject.getTaskArrayList().size()==1){
+                    choice=1;
+                    break;
+                }
+                else{
+                    System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                    choice = Validation.numberCheck(scanner);
+                    if(choice>0 && choice<=selectedProject.getTaskArrayList().size()){
+                        break;
+                    }
+                    else{
+                        System.out.println("\t\tWrong input");
+                    }
+                }
+
+            }
+
+            Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
+            for(Members members :selectedTask.getAssignedMembers()){
+                members.getAssignedTaskArrayList().remove(selectedTask);
+            }
+            selectedProject.getTaskArrayList().remove(selectedTask);
+            selectedTask.setStatus("Cancelled");
+            selectedProject.getCancelledTaskArrayList().add(selectedTask);
+            System.out.println("\n\t\tTask Deleted form the Project! The deleted tasks will be stored as Cancelled Tasks!");
+            System.out.println();
+            DesignModel.printLine();
+        }
+    }
     public void createSubTasks(){
         //ArrayList<Task> taskArrayList = new ArrayList<>();
 
@@ -1963,6 +2044,112 @@ public class Members {
         }
 
     }
+    public void deleteSubTask(){
+        System.out.println();
+        DesignModel.printLine();
+
+        System.out.println("\t\tView the Project tasks");
+        System.out.println();
+
+        if(projectArrayList.size() == 0){
+            System.out.print("\t\tNo Projects found!\n");
+            DesignModel.printLine();
+        }
+        else {
+            int choice;
+            if (projectArrayList.size() == 1) {
+                choice = 1;
+            } else {
+                System.out.printf("\n\t\t%15s %15s %15s %25s %35s\n", "S.no", "ProjectName", "Deadline", "Status", "Description");
+                int i = 0;
+                for (Project project : projectArrayList) {
+
+                    i++;
+                    System.out.printf("\t\t%15s %15s %15s %25s %35s\n", i, project.getProjectName(), project.getDeadline(), project.getStatus(), project.getProjectDescription());
+                }
+                DesignModel.printLine();
+
+
+                while (true) {
+                    System.out.print("\n\t\tEnter the s.no of the Project which you want to View Tasks : ");
+                    choice = Validation.numberCheck(scanner);
+                    if (choice > 0 && choice <= projectArrayList.size()) {
+                        break;
+                    } else {
+                        System.out.println("\t\tWrong input");
+                    }
+                }
+            }
+
+            Project selectedProject = projectArrayList.get(choice - 1);
+
+            if (selectedProject.getTaskArrayList().size() == 0) {
+                System.out.print("\t\tNo Task found!\n");
+                DesignModel.printLine();
+            } else {
+                if (selectedProject.getTaskArrayList().size() == 1) {
+                    choice = 1;
+                } else {
+                    System.out.printf("\n\t\t%15s %15s %15s %25s %35s\n", "S.no", "ProjectName", "Deadline", "Status", "Description");
+                    int i = 0;
+                    for (Task task : selectedProject.getTaskArrayList()) {
+
+                        i++;
+                        System.out.printf("\t\t%15s %15s %15s %25s %35s\n", i, task.getTaskName(), task.getDeadline(), task.getStatus(), task.getDescription());
+                    }
+                    DesignModel.printLine();
+
+
+                    while (true) {
+                        System.out.print("\n\t\tEnter the s.no of the Task which you want to View SubTasks : ");
+                        choice = Validation.numberCheck(scanner);
+                        if (choice > 0 && choice <= projectArrayList.size()) {
+                            break;
+                        } else {
+                            System.out.println("\t\tWrong input");
+                        }
+                    }
+                }
+
+                Task selectedTask = selectedProject.getTaskArrayList().get(choice - 1);
+
+                if (selectedTask.getSubTask().size() == 0) {
+                    System.out.println("\t\t\tNo subTask is created yet!");
+                } else {
+                    int i = 0;
+                    System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
+                    for (Task task : selectedTask.getSubTask()) {
+                        i++;
+                        System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                    }
+
+                    DesignModel.printLine();
+                }
+
+                while(true){
+                    if(selectedTask.getSubTask().size()==1){
+                        choice=1;
+                        break;
+                    }
+                    else{
+                        System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                        choice = Validation.numberCheck(scanner);
+                        if(choice>0 && choice<=selectedTask.getSubTask().size()){
+                            break;
+                        }
+                        else{
+                            System.out.println("\t\tWrong input");
+                        }
+                    }
+
+                }
+
+                Task selectedSubTask = selectedTask.getSubTask().get(choice-1);
+                selectedTask.getSubTask().remove(selectedSubTask);
+                System.out.println("\t\tSub Task Deleted");
+            }
+        }
+    }
     public int readDiscussionBox(){
         System.out.println();
         DesignModel.printLine();
@@ -2222,9 +2409,10 @@ public class Members {
             System.out.println("\t\t\t Enter 3 to View/Update Details of Projects");
             System.out.println("\t\t\t Enter 4 to Add Tasks To Project");
             System.out.println("\t\t\t Enter 5 to View/Update Details of Task");
-            System.out.println("\t\t\t Enter 6 to Sub Task");
-            System.out.println("\t\t\t Enter 7 to View/Update Details of Task");
-            //System.out.println("\t\t\t Enter 8 to Create a Milestone");
+            System.out.println("\t\t\t Enter 6 to Delete Task");
+            System.out.println("\t\t\t Enter 7 to Create Sub Task");
+            System.out.println("\t\t\t Enter 8 to View/Update Details of Task");
+            System.out.println("\t\t\t Enter 9 to Delete subTask");
             //System.out.println("\t\t\t Enter 9 to View/Update a Milestone");
             System.out.println("\t\t\t Enter 10 for DiscussionBox");
             System.out.println("\t\t\t Enter 11 to Add Files");
@@ -2291,6 +2479,16 @@ public class Members {
                     }
                 }
                 case 6 -> {
+                    if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
+                        this.deleteTask();
+                    }
+                    else{
+                        System.out.println("\n\t\t\tSorry! You don't have the access to Delete Tasks In a Project");
+                        System.out.println();
+                        DesignModel.printLine();
+                    }
+                }
+                case 7 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
                         this.createSubTasks();
                     }
@@ -2300,12 +2498,22 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 7 -> {
+                case 8 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks") || DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
                         this.viewSubTask();
                     }
                     else{
                         System.out.println("\n\t\t\tSorry! You don't have the access to Update Tasks Status In a Project");
+                        System.out.println();
+                        DesignModel.printLine();
+                    }
+                }
+                case 9 -> {
+                    if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
+                        this.deleteSubTask();
+                    }
+                    else{
+                        System.out.println("\n\t\t\tSorry! You don't have the access to Delete Tasks In a Project");
                         System.out.println();
                         DesignModel.printLine();
                     }

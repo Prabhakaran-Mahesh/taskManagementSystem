@@ -25,6 +25,7 @@ public class Task {
     ArrayList<Members> assignedMembers = new ArrayList<>();
     ArrayList<Members> followers = new ArrayList<>();
     ArrayList<String> forums = new ArrayList<>();
+    String links;
 
     public Task(String taskName, String taskOwner, String description, String deadline, String priority) {
         this.taskName = taskName;
@@ -33,6 +34,7 @@ public class Task {
         this.deadline = deadline;
         this.priority = priority;
         this.status = "Not yet Started";
+        this.links = "https://task_management_system/project/"+taskName.replace(" ", "_")+"/";
     }
 
     public Task(String taskName, String taskOwner, String description, String deadline, String priority, ArrayList<Members> assignedMembers, int type) {
@@ -48,6 +50,7 @@ public class Task {
         this.status = "Not yet Started";
         this.priority = priority;
         this.assignedMembers = assignedMembers;
+        this.links = "https://task_management_system/project/"+taskName.replace(" ", "_")+"/";
     }
 
     public String getId() {
@@ -216,6 +219,14 @@ public class Task {
 
     public void setForums(ArrayList<String> forums) {
         this.forums = forums;
+    }
+
+    public String getLinks() {
+        return links;
+    }
+
+    public void setLinks(String links) {
+        this.links = links;
     }
 }
 

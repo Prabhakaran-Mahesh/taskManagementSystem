@@ -13,6 +13,7 @@ public class Project {
     ArrayList<String> chatGroup = new ArrayList<>();
     ArrayList<String> fileManager = new ArrayList<>();
     ArrayList<Task> taskArrayList = new ArrayList<>();
+    ArrayList<Task> cancelledTaskArrayList = new ArrayList<>();
     //ArrayList<MileStones> mileStonesArrayList = new ArrayList<>();
     ArrayList<String> workflow = new ArrayList<>();
     ArrayList<Object> recycleBin = new ArrayList<>();
@@ -112,6 +113,14 @@ public class Project {
 
     public void setTaskArrayList(ArrayList<Task> taskArrayList) {
         this.taskArrayList = taskArrayList;
+    }
+
+    public ArrayList<Task> getCancelledTaskArrayList() {
+        return cancelledTaskArrayList;
+    }
+
+    public void setCancelledTaskArrayList(ArrayList<Task> cancelledTaskArrayList) {
+        this.cancelledTaskArrayList = cancelledTaskArrayList;
     }
 
     public ArrayList<String> getWorkflow() {

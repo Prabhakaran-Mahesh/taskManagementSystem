@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="Task works completed">
+    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="SubTask and Dashboard works completed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/objects/Members.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Members.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Task.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +89,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651426085231</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="SubTask and Dashboard works completed">
+      <created>1651460820298</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1651460820298</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -105,6 +114,7 @@
     <MESSAGE value="loginSignup" />
     <MESSAGE value="Project works completed" />
     <MESSAGE value="Task works completed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Task works completed" />
+    <MESSAGE value="SubTask and Dashboard works completed" />
+    <option name="LAST_COMMIT_MESSAGE" value="SubTask and Dashboard works completed" />
   </component>
 </project>
