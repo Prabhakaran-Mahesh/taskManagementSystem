@@ -1305,68 +1305,131 @@ public class Members {
                 }
             }
         }
-        else{
-            if(getType().equalsIgnoreCase("Tester")){
-                System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
-                System.out.print("\t\tEnter the new New Priority S.no : ");
-                System.out.print("\n\t\t\t S.no : 1. Issue Reported");
-                System.out.print("\n\t\t\t S.no : 1. Completed");
+    }
+    public void viewAssignedTask(){
+        System.out.println();
+        DesignModel.printLine();
 
-                System.out.print("\t\tChoose task Status! Enter");
-                int priorityChoice = -1;
-                while(true) {
-                    while (priorityChoice == -1) {
-                        System.out.print("\t\t S.no: ");
-                        priorityChoice = Validation.numberCheck(scanner);
-                    }
+        System.out.println("\t\tView the Project tasks");
+        System.out.println();
 
-                    if (priorityChoice < 1 || priorityChoice > 2) {
-                        System.out.println("\n\t\t S.no not found!");
-                    } else {
-                        break;
-                    }
-                }
-                if(priorityChoice==1){
-                    selectedTask.setStatus("Issue Reported");
-                } else{
-                    selectedTask.setStatus("Completed");
-                }
-
-
+        if(this.getAssignedTaskArrayList().size() == 0){
+            System.out.print("\t\tNo Tasks are assigned to you yet!\n");
+            DesignModel.printLine();
+        }
+        else {
+            int choice;
+            if(this.getAssignedTaskArrayList().size() == 1){
+                choice = 1;
             }
-            else if(getType().equalsIgnoreCase("Member")){
-                System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
-                System.out.print("\t\tEnter the new New Priority S.no : ");
-
+            else{
                 int i = 0;
-                for(String m : DataModel.getTaskStatus()){
-                    if(!m.equalsIgnoreCase("Completed") || !m.equalsIgnoreCase("Issue Reported")){
-                        i++;
-                        System.out.print("\n\t\t\t S.no : " + i + ". " + m);
-                    }
+                System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
+                for (Task task : this.getAssignedTaskArrayList()) {
+                    i++;
+                    System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
                 }
-                System.out.println();
+
                 DesignModel.printLine();
 
-                System.out.print("\t\tChoose task Status! Enter");
-                int priorityChoice = -1;
-                while(true) {
-                    while (priorityChoice == -1) {
-                        System.out.print("\t\t S.no: ");
-                        priorityChoice = Validation.numberCheck(scanner);
-                    }
-
-                    if (priorityChoice < 1 || priorityChoice > DataModel.getTaskStatus().size()-2) {
-                        System.out.println("\n\t\t S.no not found!");
-                    } else {
+                System.out.println("\n\t\tDo you want to update Task Details? Enter 1 to yes, Enter -1 to no");
+                int ver;
+                while (true) {
+                    System.out.print("\t\tEnter your choice : ");
+                    ver = Validation.numberCheck(scanner);
+                    if (ver == -2 || ver == 1) {
                         break;
+                    } else {
+                        System.out.println("\t\tWrong input");
                     }
                 }
 
-                selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
+                if (ver == 1) {
+                    updateAssignedTaskDetails();
+                }
             }
         }
+    }
+    private void updateAssignedTaskDetails(){
+        int choice;
 
+        while(true){
+            if(this.getAssignedTaskArrayList().size()==1){
+                choice=1;
+                break;
+            }
+            else{
+                System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                choice = Validation.numberCheck(scanner);
+                if(choice>0 && choice<=this.getAssignedTaskArrayList().size()){
+                    break;
+                }
+                else{
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+        }
+
+        Task selectedTask = this.getAssignedTaskArrayList().get(choice-1);
+
+        if(getType().equalsIgnoreCase("Tester")){
+            System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
+            System.out.print("\t\tEnter the new New Priority S.no : ");
+            System.out.print("\n\t\t\t S.no : 1. Issue Reported");
+            System.out.print("\n\t\t\t S.no : 1. Completed");
+
+            System.out.print("\t\tChoose task Status! Enter");
+            int priorityChoice = -1;
+            while(true) {
+                while (priorityChoice == -1) {
+                    System.out.print("\t\t S.no: ");
+                    priorityChoice = Validation.numberCheck(scanner);
+                }
+
+                if (priorityChoice < 1 || priorityChoice > 2) {
+                    System.out.println("\n\t\t S.no not found!");
+                } else {
+                    break;
+                }
+            }
+            if(priorityChoice==1){
+                selectedTask.setStatus("Issue Reported");
+            } else{
+                selectedTask.setStatus("Completed");
+            }
+        }
+        else if(getType().equalsIgnoreCase("Member")){
+            System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
+            System.out.print("\t\tEnter the new New Priority S.no : ");
+
+            int i = 0;
+            for(String m : DataModel.getTaskStatus()){
+                if(!m.equalsIgnoreCase("Completed") || !m.equalsIgnoreCase("Issue Reported")){
+                    i++;
+                    System.out.print("\n\t\t\t S.no : " + i + ". " + m);
+                }
+            }
+            System.out.println();
+            DesignModel.printLine();
+
+            System.out.print("\t\tChoose task Status! Enter");
+            int priorityChoice = -1;
+            while(true) {
+                while (priorityChoice == -1) {
+                    System.out.print("\t\t S.no: ");
+                    priorityChoice = Validation.numberCheck(scanner);
+                }
+
+                if (priorityChoice < 1 || priorityChoice > DataModel.getTaskStatus().size()-2) {
+                    System.out.println("\n\t\t S.no not found!");
+                } else {
+                    break;
+                }
+            }
+
+            selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
+        }
     }
     public void deleteTask() {
         System.out.println();
@@ -2413,7 +2476,6 @@ public class Members {
             System.out.println("\t\t\t Enter 7 to Create Sub Task");
             System.out.println("\t\t\t Enter 8 to View/Update Details of Task");
             System.out.println("\t\t\t Enter 9 to Delete subTask");
-            //System.out.println("\t\t\t Enter 9 to View/Update a Milestone");
             System.out.println("\t\t\t Enter 10 for DiscussionBox");
             System.out.println("\t\t\t Enter 11 to Add Files");
             System.out.println("\t\t\t Enter -1 to Logout\n");
@@ -2469,8 +2531,11 @@ public class Members {
                     }
                 }
                 case 5 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks") || DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
+                    if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")){
                         this.viewTask();
+                    }
+                    else if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
+                        this.viewAssignedTask();
                     }
                     else{
                         System.out.println("\n\t\t\tSorry! You don't have the access to Update Tasks Status In a Project");
