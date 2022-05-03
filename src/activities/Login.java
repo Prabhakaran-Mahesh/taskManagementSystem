@@ -4,6 +4,7 @@ import models.DataModel;
 import models.DesignModel;
 import objects.Members;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Login {
@@ -16,7 +17,7 @@ public class Login {
      */
     private static boolean loginVerification(String email, String password){
         for (Members teamMember : DataModel.getMembersArrayList()) {
-            if (teamMember.getPassword().equals(password) && teamMember.getEmail().equals(email)) {
+            if (teamMember.getPassword().equals(password) && teamMember.getEmail().equalsIgnoreCase(email)) {
                 teamMember.workOfMember();
                 return true;
             }

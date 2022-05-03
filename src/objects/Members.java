@@ -2,11 +2,12 @@ package objects;
 
 import activities.Validation;
 import activities.WelcomePage;
-import jdk.jfr.DataAmount;
 import models.DataModel;
 import models.DesignModel;
 
+
 import java.io.File;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -25,8 +26,6 @@ public class Members {
     ArrayList<String> notification = new ArrayList<>();
 
     //ArrayList<MileStones> mileStonesArrayList = new ArrayList<>();
-
-    HashMap<String, String> permissions = new HashMap<>();
 
     static public Scanner scanner = new Scanner(System.in);
 
@@ -88,18 +87,6 @@ public class Members {
 
     public ArrayList<String> getNotification() {
         return notification;
-    }
-
-    public void setNotification(ArrayList<String> notification) {
-        this.notification = notification;
-    }
-
-    public HashMap<String, String> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(HashMap<String, String> permissions) {
-        this.permissions = permissions;
     }
 
     public String getType() {
@@ -178,90 +165,102 @@ public class Members {
 
         System.out.print("\t\t\tEnter Temporary Password : ");
         while ((password = scanner.nextLine()).isEmpty()) {
-            System.out.print("Enter a Valid Project name : ");
+            System.out.print("Enter a Valid password : ");
         }
-
-        System.out.println("\t\t\tEnter Type : ");
-        int i=0;
-        for(String types : DataModel.getTypeOfUser().keySet().stream().toList()){
-            i++;
-            System.out.println("\t\t"+i+". "+types);
-        }
-        i++;
-        System.out.println("\t\t" + i + ". Add Custom Type");
-        System.out.print("\n\t\tEnter s.no the User Type : ");
-
-        int typeChoice = -1;
-        while(true){
-            while(typeChoice == -1){
-                System.out.print("\t\t S.no: ");
-                typeChoice = Validation.numberCheck(scanner);
-            }
-
-            if(typeChoice == -2){
-                break;
-            }
-            else if(typeChoice<1 || typeChoice > DataModel.getTypeOfUser().keySet().stream().toList().size() + 1){
-                System.out.println("\n\t\tS.no not found!");
-                typeChoice = -1;
-            }
-            else{
-                break;
-            }
-        }
-
-        Members member = null;
-
-        if(typeChoice == i){
-            System.out.print("\n\t\tEnter Type name : ");
-            while ((type = scanner.nextLine()).isEmpty()) {
-                System.out.print("Enter a Valid Project name : ");
-            }
-
-            i=0;
-            for(String config : DataModel.getConfigurations()){
-                i++;
-                System.out.println("\t\t"+i+". "+config);
-            }
-            System.out.println("\n\t\tSelect the Permissions that you allow for the users of type " + type + "\n");
-            ArrayList<String> configurations = new ArrayList<>();
-
-            System.out.println("\n\t\tEnter your choices\n");
-            int memberChoice = -1;
-            while(true){
-                while(memberChoice == -1){
-                    System.out.print("\t\t S.no: ");
-                    memberChoice = Validation.numberCheck(scanner);
-                }
-
-                if(memberChoice == -2){
-                    break;
-                }
-                else if(memberChoice<1 || memberChoice>DataModel.getConfigurations().size()){
-                    System.out.println("\n\t\t S.no not found!");
-                    memberChoice = -1;
-                    continue;
-                }
-                configurations.add(DataModel.getConfigurations().get(memberChoice-1));
-                memberChoice = -1;
-
-            }
-
-            DataModel.getTypeOfUser().put(type, configurations);
-            member = new Members(name, email, password, type);
-        }
-        else if(typeChoice == -2){
-            member = new Members(name, email, password, "Member");
-
-        }
-        else{
-            member = new Members(name, email, password, DataModel.getTypeOfUser().keySet().stream().toList().get(typeChoice-1));
-        }
-
-
+        Members member = new Members(name, email, password, "Member");
         DataModel.getMembersArrayList().add(member);
         System.out.println("\t\tUser added to the Organisation");
         DesignModel.printLine();
+    }
+
+    public String setUserType(){
+        System.out.print("\n\t\tEnter Type name : ");
+        while ((type = scanner.nextLine()).isEmpty()) {
+            System.out.print("Enter a Valid Name : ");
+        }
+
+        int i=0;
+        for(String config : DataModel.getConfigurations()){
+            i++;
+            System.out.println("\t\t"+i+". "+config);
+        }
+        System.out.println("\n\t\tSelect the Permissions that you allow for the users of type " + type + "\n");
+        ArrayList<String> configurations = new ArrayList<>();
+
+        System.out.println("\n\t\tEnter your choices\n");
+        int memberChoice = -1;
+        while(true){
+            while(memberChoice == -1){
+                System.out.print("\t\t S.no: ");
+                memberChoice = Validation.numberCheck(scanner);
+            }
+
+            if(memberChoice == -2){
+                break;
+            }
+            else if(memberChoice<1 || memberChoice>DataModel.getConfigurations().size()){
+                System.out.println("\n\t\t S.no not found!");
+                memberChoice = -1;
+                continue;
+            }
+            configurations.add(DataModel.getConfigurations().get(memberChoice-1));
+            memberChoice = -1;
+
+        }
+
+        DataModel.getTypeOfUser().put(type, configurations);
+        System.out.println("\t\tType of User Added Successfully!");
+        return type;
+    }
+    public void editUserType(){
+        System.out.println("\n\t\tEdit User Type");
+        int i=0;
+        for(Members members : DataModel.getMembersArrayList()){
+            i++;
+            System.out.println(i+". "+members.getName()+"\t\t"+members.getType());
+        }
+        System.out.println("\n\t\tEnter s.no of which User Type You want to change\t\tEnter -1 to go back");
+        int choice;
+        while(true) {
+            do {
+                System.out.print("\n\t\tEnter your choice : ");
+                choice = Validation.numberCheck(scanner);
+            } while (choice == -1);
+
+            if (choice == 0 || choice < -2 || choice > DataModel.getMembersArrayList().size()) {
+                System.out.println("\t\tWrong Input!");
+            } else if (choice == -2) {
+                break;
+            } else{
+                Members member = DataModel.getMembersArrayList().get(choice-1);
+                System.out.println();
+                i=0;
+                for(String key : DataModel.getTypeOfUser().keySet().stream().toList()){
+                    i++;
+                    System.out.println("\n\t\t" + i + ". " + key + " : Permissions Allowed\n");
+                    for(String configs : DataModel.getTypeOfUser().get(key)){
+                        System.out.println("\t\t\t"+configs);
+                    }
+                }
+                System.out.println("\n\t\t Enter the S.no of User Type who you want to edit Permissions.\n\t\t Enter 0 to add new user Type.\n\t\t Enter -1 to go back");
+                int c = 0;
+                do {
+                    System.out.print("\n\t\tEnter your choice : ");
+                    c = Validation.numberCheck(scanner);
+                } while (c == -1);
+                if(c > DataModel.getTypeOfUser().keySet().size() || c < -2){
+                    System.out.println("\t\tEnter correct number!");
+                } else if(c == -2){
+                    break;
+                } else if(c == 0){
+                    String types = this.setUserType();
+                    member.setType(types);
+                } else {
+                    String typeofUser = DataModel.getTypeOfUser().keySet().stream().toList().get(choice - 1);
+                    member.setType(typeofUser);
+                }
+            }
+        }
     }
     public void createProjects(){
 
@@ -2409,6 +2408,109 @@ public class Members {
             }
         }
     }
+    public void permissionSettings(){
+        while(true){
+
+            int i=0;
+            for(String key : DataModel.getTypeOfUser().keySet().stream().toList()){
+                i++;
+                System.out.println("\n\t\t" + i + ". " + key + " : Permissions Allowed\n");
+                for(String configs : DataModel.getTypeOfUser().get(key)){
+                    System.out.println("\t\t\t"+configs);
+                }
+            }
+            System.out.println("\n\t\t Enter the S.no of User Type who you want to edit Permissions.\n\t\t Enter 0 to add new user Type.\n\t\t Enter -1 to go back");
+
+            int choice;
+            do {
+                System.out.print("\n\t\tEnter your choice : ");
+                choice = Validation.numberCheck(scanner);
+            } while (choice == -1);
+
+            if(choice > DataModel.getTypeOfUser().keySet().size() || choice < -2){
+                System.out.println("\t\tEnter correct number!");
+                choice = -1;
+            } else if(choice == -2){
+                break;
+            } else if(choice == 0){
+                this.setUserType();
+            } else{
+                String typeofUser = DataModel.getTypeOfUser().keySet().stream().toList().get(choice-1);
+                System.out.println("\n\t\t\tEnter 1 to Remove Permission.\t\t\tEnter 2 to Add Permission");
+                while(true){
+                    int choices;
+                    do {
+                        System.out.print("\n\t\tEnter your choice : ");
+                        choices = Validation.numberCheck(scanner);
+                    } while (choices == -1);
+
+                    if(choices == 1) {
+                        i = 0;
+                        for (String string : DataModel.getTypeOfUser().get(typeofUser)) {
+                            i++;
+                            System.out.println("\n\t\t" + i + ". " + string);
+                        }
+                        System.out.println("\n\t\t\tEnter -1 to go back");
+                        while (true) {
+                            ArrayList<Integer> indexes = new ArrayList<>();
+                            int c;
+                            do {
+                                System.out.print("\n\t\tEnter your choice : ");
+                                c = Validation.numberCheck(scanner);
+                            } while (c == -1);
+                            if(c > DataModel.getTypeOfUser().get(typeofUser).size() || c < -2){
+                                System.out.println("\t\tEnter correct number!");
+                                c = -1;
+                            }
+                            if(c == -2){
+                                for(int index : indexes){
+                                    DataModel.getTypeOfUser().get(typeofUser).remove(index);
+                                }
+                                break;
+                            } else {
+                                indexes.add(c-1);
+                            }
+                        }
+                    } else if(choices == 2){
+                        ArrayList<String> leftConfigs = DataModel.getConfigurations();
+                        for(String string : DataModel.getTypeOfUser().get(typeofUser)){
+                            leftConfigs.remove(string);
+                        }
+
+                        i = 0;
+                        for(String string : leftConfigs){
+                            i++;
+                            System.out.println("\n\t\t" + i + ". " + string);
+                        }
+                        System.out.println("\n\t\t\tEnter -1 to go back");
+                        while(true) {
+                            int c;
+                            do {
+                                System.out.print("\n\t\tEnter your choice : ");
+                                c = Validation.numberCheck(scanner);
+                            } while (c == -1);
+
+                            if(c > leftConfigs.size() || c < -2){
+                                System.out.println("\t\tEnter correct number!");
+                                c = -1;
+                            }
+                            if(c == -2){
+                                break;
+                            } else {
+                                DataModel.getTypeOfUser().get(typeofUser).add(leftConfigs.get(c-1));
+                            }
+                        }
+
+                    } else {
+                        System.out.println("\t\tEnter correct number!");
+                        choices = -1;
+                    }
+                }
+            }
+
+
+        }
+    }
     public void showListOfProjects(){
         System.out.println("\n\t\t\tCurrently working Projects : \n");
 
@@ -2468,16 +2570,18 @@ public class Members {
 
             System.out.println("\n\t\t\t Enter 0 to Change Password");
             System.out.println("\t\t\t Enter 1 to Add a User to your Organisation");
-            System.out.println("\t\t\t Enter 2 to Create a new Project");
-            System.out.println("\t\t\t Enter 3 to View/Update Details of Projects");
-            System.out.println("\t\t\t Enter 4 to Add Tasks To Project");
-            System.out.println("\t\t\t Enter 5 to View/Update Details of Task");
-            System.out.println("\t\t\t Enter 6 to Delete Task");
-            System.out.println("\t\t\t Enter 7 to Create Sub Task");
-            System.out.println("\t\t\t Enter 8 to View/Update Details of Task");
-            System.out.println("\t\t\t Enter 9 to Delete subTask");
-            System.out.println("\t\t\t Enter 10 for DiscussionBox");
-            System.out.println("\t\t\t Enter 11 to Add Files");
+            System.out.println("\t\t\t Enter 2 to View/Update User Type");
+            System.out.println("\t\t\t Enter 3 to Create a new Project");
+            System.out.println("\t\t\t Enter 4 to View/Update Details of Projects");
+            System.out.println("\t\t\t Enter 5 to Add Tasks To Project");
+            System.out.println("\t\t\t Enter 6 to View/Update Details of Task");
+            System.out.println("\t\t\t Enter 7 to Delete Task");
+            System.out.println("\t\t\t Enter 8 to Create Sub Task");
+            System.out.println("\t\t\t Enter 9 to View/Update Details of Task");
+            System.out.println("\t\t\t Enter 10 to Delete subTask");
+            System.out.println("\t\t\t Enter 11 for DiscussionBox");
+            System.out.println("\t\t\t Enter 12 to Add Files");
+            System.out.println("\t\t\t Enter 13 to Permission Settings");
             System.out.println("\t\t\t Enter -1 to Logout\n");
 
             int adminChoice = -1;
@@ -2501,6 +2605,11 @@ public class Members {
                     }
                 }
                 case 2 -> {
+                    if(this.getType().equalsIgnoreCase("Manager")){
+                        this.permissionSettings();
+                    }
+                }
+                case 3 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Create Projects")){
                         this.createProjects();
                     }
@@ -2510,7 +2619,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 3 -> {
+                case 4 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Update Projects")){
                         this.viewProjects();
                     }
@@ -2520,7 +2629,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 4 -> {
+                case 5 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
                         this.createTasks();
                     }
@@ -2530,7 +2639,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 5 -> {
+                case 6 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")){
                         this.viewTask();
                     }
@@ -2543,7 +2652,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 6 -> {
+                case 7 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
                         this.deleteTask();
                     }
@@ -2553,7 +2662,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 7 -> {
+                case 8 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
                         this.createSubTasks();
                     }
@@ -2563,7 +2672,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 8 -> {
+                case 9 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks") || DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
                         this.viewSubTask();
                     }
@@ -2573,7 +2682,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 9 -> {
+                case 10 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
                         this.deleteSubTask();
                     }
@@ -2583,8 +2692,13 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 10 -> this.writeDiscussionBox();
-                case 11 -> this.inputFiles();
+                case 11 -> this.writeDiscussionBox();
+                case 12 -> this.inputFiles();
+                case 13 -> {
+                    if(this.getType().equalsIgnoreCase("Manager")){
+                        this.editUserType();
+                    }
+                }
                 default -> System.out.println("\n\tWrong value. Give correct input number!\n");
 
             }
