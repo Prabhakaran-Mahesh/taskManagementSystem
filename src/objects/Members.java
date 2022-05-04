@@ -1111,12 +1111,12 @@ public class Members {
 
                 DesignModel.printLine();
 
-                System.out.println("\n\t\tDo you want to update Task Details? Enter 1 to yes, Enter -1 to no");
+                System.out.println("\n\t\tEnter 1 to update Task Details,\n\t\tEnter 2 to view Activity Stream,\n\t\tEnter 3 to Comments,\n\t\tEnter -1 to go back");
                 int ver;
                 while (true) {
                     System.out.print("\t\tEnter your choice : ");
                     ver = Validation.numberCheck(scanner);
-                    if (ver == -2 || ver == 1) {
+                    if (ver == -2 || ver == 1 || ver == 2 || ver == 3) {
                         break;
                     } else {
                         System.out.println("\t\tWrong input");
@@ -1125,6 +1125,12 @@ public class Members {
 
                 if (ver == 1) {
                     updateTaskDetails(selectedProject);
+                }
+
+                else if(ver == 2){
+                    this.viewActivityStream(selectedProject);
+                } else if (ver == 3) {
+                    this.viewComments(selectedProject);
                 }
             }
         }
@@ -1186,8 +1192,11 @@ public class Members {
                         System.out.print("");
 
                         if(Validation.messageValidation(chat)){
+                            selectedTask.getActivityStream().add("The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName());
                             selectedTask.setTaskName(chat);
+
                         }
+
                     }
 
                     case 2 -> {
@@ -1198,7 +1207,7 @@ public class Members {
                             deadline = scanner.next();
 
                         } while (!Validation.deadlineDateValidation(selectedProject.getDeadline(), deadline));
-
+                        selectedTask.getActivityStream().add("The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName());
                         selectedTask.setDeadline(deadline);
                     }
 
@@ -1210,6 +1219,7 @@ public class Members {
                         description = scanner.nextLine();
                         System.out.print("");
 
+                        selectedTask.getActivityStream().add("The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName());
                         selectedTask.setDescription(description);
                     }
 
@@ -1240,6 +1250,7 @@ public class Members {
                             }
                         }
 
+                        selectedTask.getActivityStream().add("The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName());
                         selectedTask.setPriority(DataModel.getPriority().get(priorityChoice-1));
                     }
 
@@ -1281,6 +1292,7 @@ public class Members {
                                 }
                             }
 
+                            selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
                             selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
                             //selectedProject.getProgressArrayList().add(selectedTask);
                         /*if(DataModel.getTaskStatus().get(priorityChoice-1).equalsIgnoreCase("Submitted for test")){
@@ -1295,6 +1307,7 @@ public class Members {
                             System.out.print("");
 
                             DataModel.getTaskStatus().add(chat);
+                            selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName());
                             selectedTask.setStatus(chat);
                         }
 
@@ -1304,6 +1317,101 @@ public class Members {
                 }
             }
         }
+    }
+    private void viewActivityStream(Project selectedProject){
+        int choice;
+
+        while(true){
+            if(selectedProject.getTaskArrayList().size()==1){
+                choice=1;
+                break;
+            }
+            else{
+                System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                choice = Validation.numberCheck(scanner);
+                if(choice>0 && choice<=selectedProject.getTaskArrayList().size()){
+                    break;
+                }
+                else{
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+        }
+
+        Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
+
+        if(selectedTask.getActivityStream().size() == 0){
+            System.out.println("\t\tNo Update On This Task");
+        }
+        else {
+            for(String activity : selectedTask.getActivityStream()){
+                System.out.println("\t\t\t"+activity);
+            }
+        }
+
+        System.out.println();
+        DesignModel.printLine();
+    }
+    private void viewComments(Project selectedProject){
+        //todo
+        int choice;
+
+        while(true){
+            if(selectedProject.getTaskArrayList().size()==1){
+                choice=1;
+                break;
+            }
+            else{
+                System.out.print("\n\t\tEnter the s.no of the Task which you want to add Comments : ");
+                choice = Validation.numberCheck(scanner);
+                if(choice>0 && choice<=selectedProject.getTaskArrayList().size()){
+                    break;
+                }
+                else{
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+        }
+
+        Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
+
+        while(true){
+            if(selectedTask.getComments().size()==0){
+                System.out.println("\t\tThere are no comments for this Task");
+            }
+            else{
+                for(String string : selectedTask.getComments()){
+                    System.out.println("\t\t\t" + string);
+                }
+            }
+
+
+            System.out.println("\n\t\tDo you wan to add comments? Enter 1 to add Comments, Enter -1 to go back");
+            int ver;
+            while (true) {
+                System.out.print("\t\tEnter your choice : ");
+                ver = Validation.numberCheck(scanner);
+                if (ver == -2 || ver == 1) {
+                    break;
+                } else {
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+            if (ver == -2){
+                break;
+            } else {
+                String comment;
+                System.out.print("\t\t\tEnter your Comment : ");
+                while ((comment = scanner.nextLine()).isEmpty()) {
+                    System.out.print("Enter a Valid Task name : ");
+                }
+                selectedTask.getComments().add(comment);
+            }
+        }
+
     }
     public void viewAssignedTask(){
         System.out.println();
@@ -1331,12 +1439,12 @@ public class Members {
 
                 DesignModel.printLine();
 
-                System.out.println("\n\t\tDo you want to update Task Details? Enter 1 to yes, Enter -1 to no");
+                System.out.println("\n\t\tEnter 1 to update Task Details,\n\t\tEnter 2 to view Activity Stream,\n\t\tEnter 3 to Comments,\n\t\tEnter -1 to go back");
                 int ver;
                 while (true) {
                     System.out.print("\t\tEnter your choice : ");
                     ver = Validation.numberCheck(scanner);
-                    if (ver == -2 || ver == 1) {
+                    if (ver == -2 || ver == 1 || ver == 2 || ver == 3) {
                         break;
                     } else {
                         System.out.println("\t\tWrong input");
@@ -1346,10 +1454,16 @@ public class Members {
                 if (ver == 1) {
                     updateAssignedTaskDetails();
                 }
+
+                else if(ver == 2){
+                    this.viewAssignedActivityStream();
+                } else if (ver == 3) {
+                    this.viewAssignedComments();
+                }
             }
         }
     }
-    private void updateAssignedTaskDetails(){
+    private void updateAssignedTaskDetails() {
         int choice;
 
         while(true){
@@ -1393,8 +1507,10 @@ public class Members {
                 }
             }
             if(priorityChoice==1){
+                selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to Issue Reported by "+this.getName());
                 selectedTask.setStatus("Issue Reported");
             } else{
+                selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to Completed by "+this.getName());
                 selectedTask.setStatus("Completed");
             }
         }
@@ -1427,8 +1543,103 @@ public class Members {
                 }
             }
 
+            selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to +"+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
             selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
         }
+    }
+    private void viewAssignedActivityStream(){
+        int choice;
+
+        while(true){
+            if(this.getAssignedTaskArrayList().size()==1){
+                choice=1;
+                break;
+            }
+            else{
+                System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                choice = Validation.numberCheck(scanner);
+                if(choice>0 && choice<=this.getAssignedTaskArrayList().size()){
+                    break;
+                }
+                else{
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+        }
+
+        Task selectedTask = this.getAssignedTaskArrayList().get(choice-1);
+
+        if(selectedTask.getActivityStream().size() == 0){
+            System.out.println("\t\tNo Update On This Task");
+        }
+        else {
+            for(String activity : selectedTask.getActivityStream()){
+                System.out.println("\t\t\t"+activity);
+            }
+        }
+
+        System.out.println();
+        DesignModel.printLine();
+    }
+    private void viewAssignedComments(){
+        int choice;
+
+        while(true){
+            if(this.getAssignedTaskArrayList().size()==1){
+                choice=1;
+                break;
+            }
+            else{
+                System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                choice = Validation.numberCheck(scanner);
+                if(choice>0 && choice<=this.getAssignedTaskArrayList().size()){
+                    break;
+                }
+                else{
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+        }
+
+        Task selectedTask = this.getAssignedTaskArrayList().get(choice-1);
+
+        while(true){
+            if(selectedTask.getComments().size()==0){
+                System.out.println("\t\tThere are no comments for this Task");
+            }
+            else{
+                for(String string : selectedTask.getComments()){
+                    System.out.println("\t\t\t" + string);
+                }
+            }
+
+
+            System.out.println("\n\t\tDo you wan to add comments? Enter 1 to add Comments, Enter -1 to go back");
+            int ver;
+            while (true) {
+                System.out.print("\t\tEnter your choice : ");
+                ver = Validation.numberCheck(scanner);
+                if (ver == -2 || ver == 1) {
+                    break;
+                } else {
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+            if (ver == -2){
+                break;
+            } else {
+                String comment;
+                System.out.print("\t\t\tEnter your Comment : ");
+                while ((comment = scanner.nextLine()).isEmpty()) {
+                    System.out.print("Enter a Valid Task name : ");
+                }
+                selectedTask.getComments().add(comment);
+            }
+        }
+
     }
     public void deleteTask() {
         System.out.println();
@@ -1597,7 +1808,7 @@ public class Members {
 
                         System.out.print("\t\t\tEnter Name of the Task : ");
                         while ((taskName = scanner.nextLine()).isEmpty()) {
-                            System.out.print("Enter a Valid Project name : ");
+                            System.out.print("Enter a Valid Task name : ");
                         }
 
                         System.out.print("\t\t\tTask Description : ");
@@ -2577,7 +2788,7 @@ public class Members {
             System.out.println("\t\t\t Enter 6 to View/Update Details of Task");
             System.out.println("\t\t\t Enter 7 to Delete Task");
             System.out.println("\t\t\t Enter 8 to Create Sub Task");
-            System.out.println("\t\t\t Enter 9 to View/Update Details of Task");
+            System.out.println("\t\t\t Enter 9 to View/Update Details of SubTask");
             System.out.println("\t\t\t Enter 10 to Delete subTask");
             System.out.println("\t\t\t Enter 11 for DiscussionBox");
             System.out.println("\t\t\t Enter 12 to Add Files");
