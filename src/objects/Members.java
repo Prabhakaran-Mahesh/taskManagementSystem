@@ -6,6 +6,7 @@ import models.DataModel;
 import models.DesignModel;
 
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.lang.reflect.Member;
 import java.text.SimpleDateFormat;
@@ -3503,30 +3504,100 @@ public class Members {
 
         this.showWorkflow();
     }
+    public int dashboardDecider(){
+        return 0;
+    }
+    public void listviewByStatus(){
+        System.out.println("\n\t\tListView :");
+        for(String status : DataModel.getTaskStatus()){
+            //System.out.println("\n\t\t\t"+status);
+            for(Project project : getProjectArrayList()){
+                for(Task task : project.getTaskArrayList()) {
+                    if (task.getStatus().equalsIgnoreCase(status)) {
+                        System.out.print(project.getProjectName() + " : -> ");
+                        System.out.printf("\t\t\t\t%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                    }
+                }
+            }
+        }
+    }
+    public void listviewByPriority(){
+        System.out.println("\n\t\tListView :");
+        for(String status : DataModel.getPriority()){
+            //System.out.println("\n\t\t\t"+status);
+            for(Project project : getProjectArrayList()){
+                for(Task task : project.getTaskArrayList()) {
+                    if (task.getPriority().equalsIgnoreCase(status)) {
+                        System.out.print(project.getProjectName() + " : -> ");
+                        System.out.printf("\t\t\t\t%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                    }
+                }
+            }
+        }
+    }
+    public void kanbanViewByStatus(){
+        System.out.println("\n\t\tKanban board :");
+        for(String status : DataModel.getTaskStatus()){
+            System.out.println("\n\t\t\t"+status+"\n");
+            for(Project project : getProjectArrayList()){
+                for(Task task : project.getTaskArrayList()) {
+                    if (task.getStatus().equalsIgnoreCase(status)) {
+                        System.out.print(project.getProjectName() + " : -> ");
+                        System.out.printf("\t\t\t\t%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                    }
+                }
+            }
+            System.out.println();
+        }
+    }
+    public void kanbanViewByPriority(){
+        System.out.println("\n\t\tKanban board :");
+        for(String status : DataModel.getPriority()){
+            System.out.println("\n\t\t\t"+status+"\n");
+            for(Project project : getProjectArrayList()){
+                for(Task task : project.getTaskArrayList()) {
+                    if (task.getPriority().equalsIgnoreCase(status)) {
+                        System.out.print(project.getProjectName() + " : -> ");
+                        System.out.printf("\t\t\t\t%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                    }
+                }
+            }
+            System.out.println();
+        }
+    }
 
     public void workOfMember(){
         System.out.println("\n\t\tWelcome : " + this.getName().toUpperCase());
+        int dash = 0;
 
         while(true) {
-            this.viewDashboard();
+            if(dash == 0){
+                this.viewDashboard();
+            } else if(dash == 1){
+                this.listviewByStatus();
+            } else{
+                this.kanbanViewByStatus();
+            }
+
             System.out.println("\n\t\tWhat would you like to do :");
 
             System.out.println("\n\t\t\t Enter 0 to Change Password");
-            System.out.println("\t\t\t Enter 1 to Add a User to your Organisation");
-            System.out.println("\t\t\t Enter 2 to View/Update User Type");
-            System.out.println("\t\t\t Enter 3 to Create a new Project");
-            System.out.println("\t\t\t Enter 4 to View/Update Details of Projects");
-            System.out.println("\t\t\t Enter 5 to Add Tasks To Project");
-            System.out.println("\t\t\t Enter 6 to View/Update Details of Task");
-            System.out.println("\t\t\t Enter 7 to Delete Task");
-            System.out.println("\t\t\t Enter 8 to Add Milestone To Project");
-            System.out.println("\t\t\t Enter 9 to View/Update Details of Milestone");
-            System.out.println("\t\t\t Enter 10 to Create Sub Task");
-            System.out.println("\t\t\t Enter 11 to View/Update Details of SubTask");
-            System.out.println("\t\t\t Enter 12 to Delete subTask");
-            System.out.println("\t\t\t Enter 13 for DiscussionBox");
-            System.out.println("\t\t\t Enter 14 to Add Files");
-            System.out.println("\t\t\t Enter 15 to Permission Settings");
+            //System.out.println("\t\t\t Enter 1 to Dashboard View -> ListView, KanbanBoard");
+            System.out.println("\t\t\t Enter 2 to Add a User to your Organisation");
+            System.out.println("\t\t\t Enter 3 to View/Update User Type");
+            System.out.println("\t\t\t Enter 4 to Create a new Project");
+            System.out.println("\t\t\t Enter 5 to View/Update Details of Projects");
+            System.out.println("\t\t\t Enter 6 to Add Tasks To Project");
+            System.out.println("\t\t\t Enter 7 to View/Update Details of Task");
+            System.out.println("\t\t\t Enter 8 to Delete Task");
+            System.out.println("\t\t\t Enter 9 to Add Milestone To Project");
+            System.out.println("\t\t\t Enter 10 to View/Update Details of Milestone");
+            System.out.println("\t\t\t Enter 11 to Create Sub Task");
+            System.out.println("\t\t\t Enter 12 to View/Update Details of SubTask");
+            System.out.println("\t\t\t Enter 13 to Delete subTask");
+            System.out.println("\t\t\t Enter 14 for DiscussionBox");
+            System.out.println("\t\t\t Enter 15 to Add Files");
+            System.out.println("\t\t\t Enter 16 to Permission Settings");
             System.out.println("\t\t\t Enter -1 to Logout\n");
 
             int adminChoice = -1;
@@ -3539,7 +3610,8 @@ public class Members {
             switch (adminChoice) {
                 case -2 -> this.exitVerification();
                 case 0 -> this.changePassword();
-                case 1 -> {
+                case 1 -> dash = this.dashboardDecider();
+                case 2 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Add Users to Organisation")){
                         this.addMembersToTheCompany();
                     }
@@ -3549,7 +3621,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 2 -> {
+                case 3 -> {
                     if(this.getType().equalsIgnoreCase("Manager")){
                         this.editUserType();
                     }
@@ -3559,7 +3631,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 3 -> {
+                case 4 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Create Projects")){
                         this.createProjects();
                     }
@@ -3569,7 +3641,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 4 -> {
+                case 5 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Update Projects")){
                         this.viewProjects();
                     }
@@ -3579,7 +3651,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 5 -> {
+                case 6 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
                         this.createTasks();
                     }
@@ -3589,7 +3661,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 6 -> {
+                case 7 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")){
                         this.viewTask();
                     }
@@ -3602,7 +3674,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 7 -> {
+                case 8 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
                         this.deleteTask();
                     }
@@ -3612,7 +3684,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 8 -> {
+                case 9 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Create Milestones")){
                         this.createMilestone();
                     }
@@ -3622,7 +3694,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 9 -> {
+                case 10 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Update Milestones")){
                         this.viewMilestone();
                     }
@@ -3632,7 +3704,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 10 -> {
+                case 11 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
                         this.createSubTasks();
                     }
@@ -3642,7 +3714,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 11 -> {
+                case 12 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks") || DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
                         this.viewSubTask();
                     }
@@ -3652,7 +3724,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 12 -> {
+                case 13 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
                         this.deleteSubTask();
                     }
@@ -3662,9 +3734,9 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 13 -> this.writeDiscussionBox();
-                case 14 -> this.inputFiles();
-                case 15 -> {
+                case 14 -> this.writeDiscussionBox();
+                case 15 -> this.inputFiles();
+                case 16 -> {
                     if(this.getType().equalsIgnoreCase("Manager")){
                         this.permissionSettings();
                     }
