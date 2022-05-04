@@ -6,6 +6,7 @@ public class Project {
     String projectId;
     String projectName;
     String projectDescription;
+    Members projectOwner;
     String deadline;
     String duration;
     String status;
@@ -26,8 +27,9 @@ public class Project {
         this.status = "Not yet started";
     }
 
-    public Project(String projectName, String projectDescription, String deadline, ArrayList<Members> teamMemberArrayList) {
+    public Project(String projectName, Members projectOwner, String projectDescription, String deadline, ArrayList<Members> teamMemberArrayList) {
         this.projectName = projectName;
+        this.projectOwner = projectOwner;
         this.projectDescription = projectDescription;
         this.deadline = deadline;
         this.status = "Not yet Started";
@@ -40,6 +42,14 @@ public class Project {
 
     public void setProjectId(String projectId) {
         this.projectId = projectId;
+    }
+
+    public Members getProjectOwner() {
+        return projectOwner;
+    }
+
+    public void setProjectOwner(Members projectOwner) {
+        this.projectOwner = projectOwner;
     }
 
     public String getProjectName() {

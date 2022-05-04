@@ -8,7 +8,9 @@ import models.DesignModel;
 
 import java.io.File;
 import java.lang.reflect.Member;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -24,6 +26,7 @@ public class Members {
 
     ArrayList<Project> projectArrayList = new ArrayList<>();
     ArrayList<String> notification = new ArrayList<>();
+    ArrayList<String> workflow = new ArrayList<>();
 
     //ArrayList<MileStones> mileStonesArrayList = new ArrayList<>();
 
@@ -95,6 +98,14 @@ public class Members {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public ArrayList<String> getWorkflow() {
+        return workflow;
+    }
+
+    public void setWorkflow(ArrayList<String> workflow) {
+        this.workflow = workflow;
     }
 
     public void exitVerification(){
@@ -266,6 +277,8 @@ public class Members {
         }
     }
     public void createProjects(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
 
         String projectName, description, deadline;
         ArrayList<Members> memberArrayList = new ArrayList<>();
@@ -400,6 +413,7 @@ public class Members {
         if(memberArrayList.size() == 0){
             Project project = new Project(projectName, description, deadline);
             projectArrayList.add(project);
+            this.getWorkflow().add("Project : "+ projectName + " has been Created! on "+ formatter.format(date));
             System.out.println("\n\t\tProject created!");
             return;
         }
@@ -450,12 +464,14 @@ public class Members {
 
         if(memberEligibleForTester.size() == 0){
 
-            Project project = new Project(projectName, description, deadline, memberArrayList);
+            Project project = new Project(projectName, this,description, deadline, memberArrayList);
             System.out.println("\n\t\tProject created!");
             for(Members m : memberArrayList){
                 m.getProjectArrayList().add(project);
+                m.getWorkflow().add("Project : "+ projectName + " has been Created! on "+ formatter.format(date));
             }
             projectArrayList.add(project);
+            this.getWorkflow().add("Project : "+ projectName + " has been Created! on "+ formatter.format(date));
             return;
         }
         else{
@@ -468,7 +484,7 @@ public class Members {
                 }
 
                 if(memberChoice == -2){
-                    Project project = new Project(projectName, description, deadline, memberArrayList);
+                    Project project = new Project(projectName, this, description, deadline, memberArrayList);
 
                     projectArrayList.add(project);
                     for(Members m : memberArrayList){
@@ -491,13 +507,16 @@ public class Members {
         }
 
 
-        Project project = new Project(projectName, description, deadline, memberArrayList);
+        Project project = new Project(projectName, this, description, deadline, memberArrayList);
 
         System.out.println("\n\t\tProject created!");
+
         for(Members m : memberArrayList){
             m.getProjectArrayList().add(project);
+            m.getWorkflow().add("Project : "+ projectName + " has been Created! on "+ formatter.format(date));
         }
         projectArrayList.add(project);
+        getWorkflow().add("Project : "+ projectName + " has been Created! on "+ formatter.format(date));
         DesignModel.printLine();
     }
     public void addMembersToProject(Project selectedProject){
@@ -549,6 +568,9 @@ public class Members {
     }
 
     public void editProjectDetails(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+
         int choice=1;
 
         if(getProjectArrayList().size()==1){
@@ -725,6 +747,7 @@ public class Members {
                         }
                         //System.out.print("\t\tEnter the S.no :");
                         selectedProject.setStatus(DataModel.getModelProjectStatus().get(status-1));
+                        getWorkflow().add("Project : "+ selectedProject.getProjectName() + " status Has been Updated! to " + DataModel.getModelProjectStatus().get(status-1) + " on " + formatter.format(date));
                     }
                     else{
                         System.out.print("\t\tEnter the custom Status : ");
@@ -734,6 +757,7 @@ public class Members {
                         System.out.print("");
 
                         DataModel.getModelProjectStatus().add(chat);
+                        getWorkflow().add("Project : "+ selectedProject.getProjectName() + " status Has been Updated! to " + chat + " on " + formatter.format(date));
                         selectedProject.setStatus(chat);
                     }
 
@@ -825,6 +849,7 @@ public class Members {
             }
 
             Project selectedProject = projectArrayList.get(choice-1);
+
 
             System.out.println("\t\tAdd tasks to the Project");
 
@@ -951,7 +976,7 @@ public class Members {
                             break;
                         }
                     }
-                    task = new Task(taskName, this.getName(), taskDescription, taskDeadline, DataModel.getPriority().get(priorityChoice - 1));
+                    task = new Task(taskName, selectedProject.getProjectOwner(), taskDescription, taskDeadline, DataModel.getPriority().get(priorityChoice - 1));
                     selectedProject.getTaskArrayList().add(task);
 
                     System.out.println("\t\t\tSelect Members for the task. Choose their S.no. Enter -1 to Stop");
@@ -1189,6 +1214,8 @@ public class Members {
         Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
 
         if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")){
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = new Date();
             boolean update = true;
             while(update){
                 System.out.println("\n\t\t\tEnter the s.no of credential you want to change!");
@@ -1226,6 +1253,7 @@ public class Members {
                             selectedTask.getActivityStream().add("The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName());
                             for(Members members : selectedTask.getAssignedMembers()){
                                 if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName()+" on "+formatter.format(date));
                                     members.getNotification().add("The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName());
                                 }
                             }
@@ -1246,6 +1274,7 @@ public class Members {
                         selectedTask.getActivityStream().add("The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName());
                         for(Members members : selectedTask.getAssignedMembers()){
                             if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName() + " on " + formatter.format(date));
                                 members.getNotification().add("The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName());
                             }
                         }
@@ -1263,6 +1292,7 @@ public class Members {
                         selectedTask.getActivityStream().add("The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName());
                         for(Members members : selectedTask.getAssignedMembers()){
                             if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName() + " on " + formatter.format(date));
                                 members.getNotification().add("The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName());
                             }
                         }
@@ -1299,6 +1329,7 @@ public class Members {
                         selectedTask.getActivityStream().add("The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName());
                         for(Members members : selectedTask.getAssignedMembers()){
                             if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName() + " on " + formatter.format(date));
                                 members.getNotification().add("The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName());
                             }
                         }
@@ -1346,9 +1377,11 @@ public class Members {
                             selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
                             for(Members members : selectedTask.getAssignedMembers()){
                                 if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName()+ " on " + formatter.format(date));
                                     members.getNotification().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
                                 }
                             }
+                            selectedTask.getTaskOwner().getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName()+ " on " + formatter.format(date));
                             selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
                             //selectedProject.getProgressArrayList().add(selectedTask);
                         /*if(DataModel.getTaskStatus().get(priorityChoice-1).equalsIgnoreCase("Submitted for test")){
@@ -1366,9 +1399,11 @@ public class Members {
                             selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName());
                             for(Members members : selectedTask.getAssignedMembers()){
                                 if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName()+ " on " + formatter.format(date));
                                     members.getNotification().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName());
                                 }
                             }
+                            selectedTask.getTaskOwner().getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName()+ " on " + formatter.format(date));
                             selectedTask.setStatus(chat);
                         }
 
@@ -1384,6 +1419,7 @@ public class Members {
                         selectedTask.getActivityStream().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
                         for(Members members : selectedTask.getAssignedMembers()){
                             if(!members.getName().equalsIgnoreCase(this.getName())){
+                                getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Remainder is changed from " +selectedTask.getRemainder()+" to "+deadline+" by "+this.getName()+ " on " + formatter.format(date));
                                 members.getNotification().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
                             }
                         }
@@ -1541,6 +1577,9 @@ public class Members {
         }
     }
     private void updateAssignedTaskDetails() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+
         int choice;
 
         while(true){
@@ -1607,17 +1646,21 @@ public class Members {
                             selectedTask.getActivityStream().add("The Task Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName());
                             for(Members members : selectedTask.getAssignedMembers()){
                                 if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getWorkflow().add("Project: "+projectArrayList.get(0).getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName() + " on " + formatter.format(date));
                                     members.getNotification().add("The Task Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName());
                                 }
                             }
+                            selectedTask.getTaskOwner().getWorkflow().add("Project: "+projectArrayList.get(0).getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName() + " on " + formatter.format(date));
                             selectedTask.setStatus("Issue Reported");
                         } else {
                             selectedTask.getActivityStream().add("The Task Status is changed from " + selectedTask.getStatus() + " to Completed by " + this.getName());
                             for(Members members : selectedTask.getAssignedMembers()){
                                 if(!members.getName().equalsIgnoreCase(this.getName())){
-                                    members.getNotification().add("The Task Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName());
+                                    members.getWorkflow().add("Project: "+projectArrayList.get(0).getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Status is changed from " + selectedTask.getStatus() + " to Completed by " + this.getName() + " on " + formatter.format(date));
+                                    members.getNotification().add("The Task Status is changed from " + selectedTask.getStatus() + " to Completed by " + this.getName());
                                 }
                             }
+                            selectedTask.getTaskOwner().getWorkflow().add("Project: "+projectArrayList.get(0).getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Status is changed from " + selectedTask.getStatus() + " to Completed by " + this.getName() + " on " + formatter.format(date));
                             selectedTask.setStatus("Completed");
                         }
                     } else if (getType().equalsIgnoreCase("Member")) {
@@ -1648,7 +1691,12 @@ public class Members {
                                 break;
                             }
                         }
-
+                        for(Members members : selectedTask.getAssignedMembers()){
+                            if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getWorkflow().add("Project: "+projectArrayList.get(0).getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Status is changed from " + selectedTask.getStatus() + " to +" + DataModel.getTaskStatus().get(priorityChoice - 1) + " by " + this.getName() + " on " + formatter.format(date));
+                                members.getNotification().add("The Task Status is changed from " + selectedTask.getStatus() + " to +" + DataModel.getTaskStatus().get(priorityChoice - 1) + " by " + this.getName());
+                            }
+                        }
                         selectedTask.getActivityStream().add("The Task Status is changed from " + selectedTask.getStatus() + " to +" + DataModel.getTaskStatus().get(priorityChoice - 1) + " by " + this.getName());
                         selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice - 1));
                     }
@@ -1768,7 +1816,7 @@ public class Members {
         }
 
     }
-    public void deleteTask() {
+    public void deleteTask(){
         System.out.println();
         DesignModel.printLine();
 
@@ -2040,7 +2088,7 @@ public class Members {
                                 break;
                             }
                         }
-                        task = new Task(taskName, this.getName(), taskDescription, taskDeadline, DataModel.getPriority().get(priorityChoice - 1));
+                        task = new Task(taskName, selectedTask.getTaskOwner(), taskDescription, taskDeadline, DataModel.getPriority().get(priorityChoice - 1));
                         selectedTask.getSubTask().add(task);
                         task.setAssignedMembers(selectedTask.getAssignedMembers());
                         task.setFollowers(selectedTask.getFollowers());
@@ -2877,6 +2925,13 @@ public class Members {
             }
         }
     }
+    public void showWorkflow(){
+        System.out.println("\n\t\t\tShow WorkFlow : \n");
+        for(String notify : this.getWorkflow()){
+            System.out.println("\t\t\t"+ notify);
+            System.out.println("\t\t\t\t\t\u2193");
+        }
+    }
     public void viewDashboard(){
         System.out.println("\n\t\tDashboard!\n");
         if(this.getType().equalsIgnoreCase("Manager")){
@@ -2907,7 +2962,7 @@ public class Members {
         }
 
 
-        //workflow();
+        this.showWorkflow();
     }
 
     public void workOfMember(){
@@ -2915,9 +2970,6 @@ public class Members {
 
         while(true) {
             this.viewDashboard();
-            for(Project project : projectArrayList){
-                System.out.println(project.getProjectName());
-            }
             System.out.println("\n\t\tWhat would you like to do :");
 
             System.out.println("\n\t\t\t Enter 0 to Change Password");

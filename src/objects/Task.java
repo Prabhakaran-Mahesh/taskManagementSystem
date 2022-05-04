@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class Task {
     String id;
     String taskName;
-    String taskOwner;
+    Members taskOwner;
     String description;
     String startDate;
     String deadline;
@@ -27,7 +27,7 @@ public class Task {
     ArrayList<String> forums = new ArrayList<>();
     String links;
 
-    public Task(String taskName, String taskOwner, String description, String deadline, String priority) {
+    public Task(String taskName, Members taskOwner, String description, String deadline, String priority) {
         this.taskName = taskName;
         this.taskOwner = taskOwner;
         this.description = description;
@@ -37,7 +37,7 @@ public class Task {
         this.links = "https://task_management_system/project/"+taskName.replace(" ", "_")+"/";
     }
 
-    public Task(String taskName, String taskOwner, String description, String deadline, String priority, ArrayList<Members> assignedMembers, int type) {
+    public Task(String taskName, Members taskOwner, String description, String deadline, String priority, ArrayList<Members> assignedMembers, int type) {
         this.taskName = taskName;
         this.taskOwner = taskOwner;
         this.description = description;
@@ -69,11 +69,11 @@ public class Task {
         this.taskName = taskName;
     }
 
-    public String getTaskOwner() {
+    public Members getTaskOwner() {
         return taskOwner;
     }
 
-    public void setTaskOwner(String taskOwner) {
+    public void setTaskOwner(Members taskOwner) {
         this.taskOwner = taskOwner;
     }
 
