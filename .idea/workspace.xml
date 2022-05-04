@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="Milestone Completed">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="List view and Kanban board created">
       <change beforePath="$PROJECT_DIR$/src/objects/Members.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Members.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -178,7 +177,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651658402147</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="List view and Kanban board created">
+      <created>1651662710280</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1651662710280</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -209,6 +215,7 @@
     <MESSAGE value="Milestone Activity Stream Completed" />
     <MESSAGE value="Milestone Comments Completed" />
     <MESSAGE value="Milestone Completed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Milestone Completed" />
+    <MESSAGE value="List view and Kanban board created" />
+    <option name="LAST_COMMIT_MESSAGE" value="List view and Kanban board created" />
   </component>
 </project>

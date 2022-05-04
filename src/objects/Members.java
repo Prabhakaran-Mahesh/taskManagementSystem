@@ -3504,9 +3504,6 @@ public class Members {
 
         this.showWorkflow();
     }
-    public int dashboardDecider(){
-        return 0;
-    }
     public void listviewByStatus(){
         System.out.println("\n\t\tListView :");
         for(String status : DataModel.getTaskStatus()){
@@ -3565,6 +3562,29 @@ public class Members {
             System.out.println();
         }
     }
+    public int decideListview(){
+        int decide = 0;
+        listviewByStatus();
+        System.out.println("\n\t\tEnter 1. to Show by status. \n\t\tEnter 2. to Show by Priority. \n\t\tEnter -1. to go back");
+        while (true) {
+            System.out.print("\t\tEnter your choice : ");
+            decide = Validation.numberCheck(scanner);
+            if (decide == -2 || decide == 1 || decide == 2) {
+                break;
+            } else {
+                System.out.println("\t\tWrong input");
+            }
+        }
+        if(decide == 1 || decide == -2){
+            return 1;
+        }
+        else{
+            return 3;
+        }
+    }
+    public int decideKanbanview(){
+        return 0;
+    }
 
     public void workOfMember(){
         System.out.println("\n\t\tWelcome : " + this.getName().toUpperCase());
@@ -3575,14 +3595,18 @@ public class Members {
                 this.viewDashboard();
             } else if(dash == 1){
                 this.listviewByStatus();
-            } else{
+            } else if(dash == 2){
                 this.kanbanViewByStatus();
+            } else if (dash == 3) {
+                this.listviewByPriority();
+            } else {
+                this.kanbanViewByPriority();
             }
 
             System.out.println("\n\t\tWhat would you like to do :");
 
             System.out.println("\n\t\t\t Enter 0 to Change Password");
-            //System.out.println("\t\t\t Enter 1 to Dashboard View -> ListView, KanbanBoard");
+            System.out.println("\t\t\t Enter 1 to Dashboard View -> ListView, KanbanBoard");
             System.out.println("\t\t\t Enter 2 to Add a User to your Organisation");
             System.out.println("\t\t\t Enter 3 to View/Update User Type");
             System.out.println("\t\t\t Enter 4 to Create a new Project");
@@ -3610,7 +3634,23 @@ public class Members {
             switch (adminChoice) {
                 case -2 -> this.exitVerification();
                 case 0 -> this.changePassword();
-                case 1 -> dash = this.dashboardDecider();
+                case 1 -> {
+                 System.out.println("\n\t\tEnter 0 to HomePage. \n\t\tEnter 1 to ListView. \n\t\tEnter 2 to Kanban Board. \n\t\tEnter -1 to go back");
+                    while (true) {
+                        System.out.print("\t\tEnter your choice : ");
+                        dash = Validation.numberCheck(scanner);
+                        if (dash == -2 || dash == 1 || dash == 2 || dash == 0) {
+                            break;
+                        } else {
+                            System.out.println("\t\tWrong input");
+                        }
+                    }
+                    if(dash == 1){
+                        dash = this.decideListview();
+                    } else if(dash == 2){
+                        dash = this.decideKanbanview();
+                    }
+                }
                 case 2 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Add Users to Organisation")){
                         this.addMembersToTheCompany();
