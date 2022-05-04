@@ -2867,14 +2867,25 @@ public class Members {
             System.out.println("\t\t\t"+ notify);
         }
     }
+    public void showManagerNotification(){
+        System.out.println("\n\t\t\tShow Notifications : \n");
+        for(Project project : this.getProjectArrayList()){
+            for(Task task : project.getTaskArrayList()){
+                if(task.getStatus().equalsIgnoreCase("Completed") || task.getStatus().equalsIgnoreCase("Issue Reported")){
+                    this.getNotification().add("\t\t"+task.getTaskName()+"\t\tStatus : "+task.getStatus());
+                }
+            }
+        }
+    }
     public void viewDashboard(){
         System.out.println("\n\t\tDashboard!\n");
-        this.showNotifications();
         if(this.getType().equalsIgnoreCase("Manager")){
+            this.showManagerNotification();
             this.showListOfProjects();
-        }else{
+        }
+        else{
+            this.showNotifications();
             System.out.println("\n\t\t\tCurrently working Tasks : \n");
-
             int i=0;
             for(Task task : getAssignedTaskArrayList()){
                 i++;
