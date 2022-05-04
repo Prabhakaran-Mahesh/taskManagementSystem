@@ -15,7 +15,7 @@ public class Project {
     ArrayList<String> fileManager = new ArrayList<>();
     ArrayList<Task> taskArrayList = new ArrayList<>();
     ArrayList<Task> cancelledTaskArrayList = new ArrayList<>();
-    //ArrayList<MileStones> mileStonesArrayList = new ArrayList<>();
+    ArrayList<Milestone> mileStonesArrayList = new ArrayList<>();
     ArrayList<String> workflow = new ArrayList<>();
     ArrayList<Object> recycleBin = new ArrayList<>();
     ArrayList<String> materials = new ArrayList<>();
@@ -157,12 +157,12 @@ public class Project {
         this.materials = materials;
     }
 
-    /*public ArrayList<MileStones> getMileStonesArrayList() {
+    public ArrayList<Milestone> getMileStonesArrayList() {
         return mileStonesArrayList;
     }
 
-    public void setMileStonesArrayList(ArrayList<MileStones> mileStonesArrayList) {
+    public void setMileStonesArrayList(ArrayList<Milestone> mileStonesArrayList) {
         this.mileStonesArrayList = mileStonesArrayList;
-    }*/
+    }
 }
 

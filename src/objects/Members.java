@@ -1526,6 +1526,582 @@ public class Members {
         }
 
     }
+
+    public void createMilestone(){
+        //ArrayList<Task> taskArrayList = new ArrayList<>();
+
+        System.out.println();
+        DesignModel.printLine();
+
+        if(projectArrayList.size() == 0){
+            System.out.print("\t\tNo Projects found!\n");
+            DesignModel.printLine();
+        }
+        else {
+            int choice;
+            if(projectArrayList.size() == 1){
+                choice = 1;
+            }
+            else{
+                System.out.printf("\n\t\t%15s %15s %15s %25s %35s\n", "S.no", "ProjectName", "Deadline", "Status", "Description");
+                int i = 0;
+                for (Project project : projectArrayList) {
+
+                    i++;
+                    System.out.printf("\t\t%15s %15s %15s %25s %35s\n", i, project.getProjectName(), project.getDeadline(), project.getStatus(), project.getProjectDescription());
+                }
+                DesignModel.printLine();
+
+
+
+                while(true){
+                    System.out.print("\n\t\tEnter the s.no of the Project which you want to add Milestone : ");
+                    choice = Validation.numberCheck(scanner);
+                    if(choice>0 && choice<=projectArrayList.size()){
+                        break;
+                    }
+                    else{
+                        System.out.println("\t\tWrong input");
+                    }
+                }
+            }
+
+            Project selectedProject = projectArrayList.get(choice-1);
+
+
+            System.out.println("\t\tAdd Milestone to the Project");
+
+            boolean done = false;
+            while (!done) {
+                System.out.println("\t\t\t1. Add Milestone");
+                System.out.println("\t\t\t-1. Milestone Adding completed");
+                do {
+                    System.out.print("\n\t\tEnter your choice : ");
+                    choice = Validation.numberCheck(scanner);
+                } while (choice == -1);
+
+                if (choice == 1) {
+                    Milestone task;
+
+                    String taskName, taskDescription, taskDeadline = "-";
+
+                    System.out.print("\t\t\tEnter Name of the Milestone : ");
+                    while ((taskName = scanner.nextLine()).isEmpty()) {
+                        System.out.print("Enter a Valid Milestone name : ");
+                    }
+
+                    System.out.print("\t\t\tMilestone Description : ");
+                    //scanner.nextLine();
+                    taskDescription = scanner.nextLine();
+                    System.out.print("");
+                    if(taskDescription.isEmpty()){
+                        taskDescription = "No Description";
+                    }
+                    System.out.print("");
+
+
+                    while(true) {
+                        System.out.println("\n\t\t\tEnter 1 to give a Deadline.\n\t\t\tEnter 2 to skip");
+                        int dead = -1;
+                        while (dead == -1) {
+                            System.out.print("\t\t S.no: ");
+                            dead = Validation.numberCheck(scanner);
+                        }
+
+                        if (dead == 1) {
+                            int flag = 0;
+                            do {
+                                System.out.println("\t\t\tEnter -1 to go back");
+                                System.out.print("\t\t\tProject Deadline (Date format : dd-MM-yyyy) : ");
+                                taskDeadline = scanner.next();
+                                if (taskDeadline.equalsIgnoreCase("-1")) {
+                                    flag = 1;
+                                    break;
+                                }
+
+                            } while (!Validation.dateValidation(taskDeadline));
+                            if (flag == 0) {
+                                break;
+                            }
+                        }
+                    }
+
+                    System.out.println("\t\tPriority List : ");
+
+                    int i = 0;
+                    for (String m : DataModel.getPriority()) {
+                        i++;
+                        System.out.print("\n\t\t\t S.no : " + i + ". " + m);
+                    }
+                    System.out.println();
+                    DesignModel.printLine();
+
+                    System.out.print("\t\tChoose task Priority! Enter");
+                    int priorityChoice = -1;
+                    while (true) {
+                        while (priorityChoice == -1) {
+                            System.out.print("\t\t S.no: ");
+                            priorityChoice = Validation.numberCheck(scanner);
+                        }
+
+                        if (priorityChoice < 1 || priorityChoice > DataModel.getPriority().size()) {
+                            System.out.println("\n\t\t S.no not found!");
+                            priorityChoice = -1;
+                        } else {
+                            break;
+                        }
+                    }
+                    task = new Milestone(taskName, selectedProject.getProjectOwner(), taskDescription, taskDeadline, DataModel.getPriority().get(priorityChoice - 1));
+                    selectedProject.getTaskArrayList().add(task);
+
+                    System.out.println("\t\tEnter the List of Tasks for the Milestone\n");
+                    i = 0;
+                    System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
+                    for (Task milestoneTask : selectedProject.getTaskArrayList()) {
+                        i++;
+                        System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, milestoneTask.getTaskName(), milestoneTask.getPriority(), milestoneTask.getDeadline(), milestoneTask.getStatus(), milestoneTask.getDescription());
+                    }
+                    int mem = 0;
+                    while (true) {
+
+                        System.out.print("\t\t\tS.no : ");
+                        mem = scanner.nextInt();
+                        if (mem == -1) {
+                            break;
+                        } else if (mem < -1 || mem > selectedProject.getTaskArrayList().size() || mem == 0) {
+                            System.out.println("\n\t\tTask not found! Enter the correct S.no");
+                        } else {
+                            task.getMilestoneTasksArrayList().add(selectedProject.getTaskArrayList().get(mem-1));
+                        }
+                    }
+
+
+                } else if (choice == -2) {
+                    done = true;
+                    System.out.println();
+                    DesignModel.printLine();
+                } else {
+                    System.out.println("\t\tWrong number. check your Input!\n");
+                }
+
+            }
+        }
+
+    }
+    public void viewMilestone(){
+        System.out.println();
+        DesignModel.printLine();
+
+        System.out.println("\t\tView the Project tasks");
+        System.out.println();
+
+        if(projectArrayList.size() == 0){
+            System.out.print("\t\tNo Projects found!\n");
+            DesignModel.printLine();
+        }
+        else {
+            int choice;
+            if(projectArrayList.size() == 1){
+                choice = 1;
+            }
+            else{
+                System.out.printf("\n\t\t%15s %15s %15s %25s %35s\n", "S.no", "ProjectName", "Deadline", "Status", "Description");
+                int i = 0;
+                for (Project project : projectArrayList) {
+
+                    i++;
+                    System.out.printf("\t\t%15s %15s %15s %25s %35s\n", i, project.getProjectName(), project.getDeadline(), project.getStatus(), project.getProjectDescription());
+                }
+                DesignModel.printLine();
+
+
+
+                while (true) {
+                    System.out.print("\n\t\tEnter the s.no of the Project which you want to View Tasks : ");
+                    choice = Validation.numberCheck(scanner);
+                    if (choice > 0 && choice <= projectArrayList.size()) {
+                        break;
+                    } else {
+                        System.out.println("\t\tWrong input");
+                    }
+                }
+            }
+
+            Project selectedProject = projectArrayList.get(choice - 1);
+
+            if (selectedProject.getTaskArrayList().size() == 0) {
+                System.out.println("\t\t\tNo task is created yet!");
+            } else {
+                int i = 0;
+                System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
+                for (Task task : selectedProject.getTaskArrayList()) {
+                    i++;
+                    System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                }
+
+                DesignModel.printLine();
+
+                System.out.println("\n\t\tEnter 1 to update Task Details,\n\t\tEnter 2 to view Activity Stream,\n\t\tEnter 3 to Comments,\n\t\tEnter -1 to go back");
+                int ver;
+                while (true) {
+                    System.out.print("\t\tEnter your choice : ");
+                    ver = Validation.numberCheck(scanner);
+                    if (ver == -2 || ver == 1 || ver == 2 || ver == 3) {
+                        break;
+                    } else {
+                        System.out.println("\t\tWrong input");
+                    }
+                }
+
+                if (ver == 1) {
+                    updateTaskDetails(selectedProject);
+                }
+
+                else if(ver == 2){
+                    this.viewActivityStream(selectedProject);
+                } else if (ver == 3) {
+                    this.viewComments(selectedProject);
+                }
+            }
+        }
+    }
+    private void updateMilestoneDetails(Project selectedProject){
+        int choice;
+
+        while(true){
+            if(selectedProject.getTaskArrayList().size()==1){
+                choice=1;
+                break;
+            }
+            else{
+                System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                choice = Validation.numberCheck(scanner);
+                if(choice>0 && choice<=selectedProject.getTaskArrayList().size()){
+                    break;
+                }
+                else{
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+        }
+
+        Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
+
+        if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")){
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = new Date();
+            boolean update = true;
+            while(update){
+                System.out.println("\n\t\t\tEnter the s.no of credential you want to change!");
+                System.out.println("\t\t\t Enter 1 to Task Name ");
+                System.out.println("\t\t\t Enter 2 to Task Deadline");
+                System.out.println("\t\t\t Enter 3 to Task Description");
+                System.out.println("\t\t\t Enter 4 to Task Priority ");
+                System.out.println("\t\t\t Enter 5 to Task Status ");
+                System.out.println("\t\t\t Enter 6 to Task Remainder");
+                System.out.println("\t\t\t Enter -1 to Go back\n");
+
+                int updateChoice = -1;
+                while(updateChoice == -1){
+                    System.out.print("\t\t\t Enter your Choice : ");
+                    updateChoice = Validation.numberCheck(scanner);
+                }
+
+                switch (updateChoice){
+                    case -2 -> {
+                        update = false;
+
+                        System.out.println();
+                        DesignModel.printLine();
+                    }
+
+                    case 1 -> {
+                        System.out.println("\n\t\tCurrent Name : " + selectedTask.getTaskName());
+                        System.out.print("\t\tEnter the new Task Name : ");
+                        String chat;
+                        //scanner.nextLine();
+                        chat = scanner.nextLine();
+                        System.out.print("");
+
+                        if(Validation.messageValidation(chat)){
+                            selectedTask.getActivityStream().add("The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName());
+                            for(Members members : selectedTask.getAssignedMembers()){
+                                if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName()+" on "+formatter.format(date));
+                                    members.getNotification().add("The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName());
+                                }
+                            }
+                            selectedTask.setTaskName(chat);
+
+                        }
+
+                    }
+
+                    case 2 -> {
+                        System.out.println("\n\t\tCurrent Deadline : " + selectedTask.getDeadline());
+                        String deadline;
+                        do {
+                            System.out.print("\t\t\tTask Deadline (Date format : dd-MM-yyyy) : ");
+                            deadline = scanner.next();
+
+                        } while (!Validation.deadlineDateValidation(selectedProject.getDeadline(), deadline));
+                        selectedTask.getActivityStream().add("The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName());
+                        for(Members members : selectedTask.getAssignedMembers()){
+                            if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName() + " on " + formatter.format(date));
+                                members.getNotification().add("The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName());
+                            }
+                        }
+                        selectedTask.setDeadline(deadline);
+                    }
+
+                    case 3 -> {
+                        System.out.println("\n\t\tCurrent Description : " + selectedTask.getDescription());
+                        System.out.print("\t\tEnter the new Project Name : ");
+                        String description;
+                        //scanner.nextLine();
+                        description = scanner.nextLine();
+                        System.out.print("");
+
+                        selectedTask.getActivityStream().add("The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName());
+                        for(Members members : selectedTask.getAssignedMembers()){
+                            if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName() + " on " + formatter.format(date));
+                                members.getNotification().add("The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName());
+                            }
+                        }
+                        selectedTask.setDescription(description);
+                    }
+
+                    case 4 -> {
+                        System.out.println("\n\t\tCurrent Priority : " + selectedTask.getPriority());
+                        System.out.print("\t\tEnter the new New Priority S.no : ");
+
+                        int i = 0;
+                        for(String m : DataModel.getPriority()){
+                            i++;
+                            System.out.print("\n\t\t\t S.no : " + i + ". " + m);
+                        }
+                        System.out.println();
+                        DesignModel.printLine();
+
+                        System.out.print("\t\tChoose task Priority! Enter");
+                        int priorityChoice = -1;
+                        while(true) {
+                            while (priorityChoice == -1) {
+                                System.out.print("\t\t S.no: ");
+                                priorityChoice = Validation.numberCheck(scanner);
+                            }
+
+                            if (priorityChoice < 1 || priorityChoice > DataModel.getPriority().size()) {
+                                System.out.println("\n\t\t S.no not found!");
+                            } else {
+                                break;
+                            }
+                        }
+
+                        selectedTask.getActivityStream().add("The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName());
+                        for(Members members : selectedTask.getAssignedMembers()){
+                            if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName() + " on " + formatter.format(date));
+                                members.getNotification().add("The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName());
+                            }
+                        }
+                        selectedTask.setPriority(DataModel.getPriority().get(priorityChoice-1));
+                    }
+
+                    case 5 -> {
+                        System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
+                        System.out.print("\t\tEnter the new New Priority S.no : ");
+
+                        int i = 0;
+                        for(String m : DataModel.getTaskStatus()){
+                            i++;
+                            System.out.print("\n\t\t\t S.no : " + i + ". " + m);
+                        }
+                        System.out.println();
+                        DesignModel.printLine();
+
+                        System.out.println("\n\t\tEnter 1 to select a Status. Enter 2 to add Custom Status");
+                        int select = -1;
+                        while(select == -1){
+                            System.out.print("\t\t\t Enter your Choice : ");
+                            select = Validation.numberCheck(scanner);
+                            if(select < 1 || select > 2){
+                                System.out.println("\t\tWrong input! Enter 1 or 2");
+                                select = -1;
+                            }
+                        }
+                        if(select == 1){
+                            System.out.print("\t\tChoose task Status! Enter");
+                            int priorityChoice = -1;
+                            while(true) {
+                                while (priorityChoice == -1) {
+                                    System.out.print("\t\t S.no: ");
+                                    priorityChoice = Validation.numberCheck(scanner);
+                                }
+
+                                if (priorityChoice < 1 || priorityChoice > DataModel.getTaskStatus().size()) {
+                                    System.out.println("\n\t\t S.no not found!");
+                                } else {
+                                    break;
+                                }
+                            }
+
+                            selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
+                            for(Members members : selectedTask.getAssignedMembers()){
+                                if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName()+ " on " + formatter.format(date));
+                                    members.getNotification().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
+                                }
+                            }
+                            selectedTask.getTaskOwner().getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName()+ " on " + formatter.format(date));
+                            selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
+                            //selectedProject.getProgressArrayList().add(selectedTask);
+                        /*if(DataModel.getTaskStatus().get(priorityChoice-1).equalsIgnoreCase("Submitted for test")){
+                            selectedProject.getTester().getAssignedTasks().add(selectedTask);
+                        }*/
+                        }
+                        else{
+                            System.out.print("\t\tEnter the custom Status : ");
+                            String chat;
+                            //scanner.nextLine();
+                            chat = scanner.nextLine();
+                            System.out.print("");
+
+                            DataModel.getTaskStatus().add(chat);
+                            selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName());
+                            for(Members members : selectedTask.getAssignedMembers()){
+                                if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName()+ " on " + formatter.format(date));
+                                    members.getNotification().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName());
+                                }
+                            }
+                            selectedTask.getTaskOwner().getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName()+ " on " + formatter.format(date));
+                            selectedTask.setStatus(chat);
+                        }
+
+                    }
+                    case 6 -> {
+                        System.out.println("\n\t\tCurrent Remainder date : " + selectedTask.getRemainder());
+                        String deadline;
+                        do {
+                            System.out.print("\t\t\tTask Remainder (Date format : dd-MM-yyyy) : ");
+                            deadline = scanner.next();
+
+                        } while (!Validation.dateValidation(deadline));
+                        selectedTask.getActivityStream().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
+                        for(Members members : selectedTask.getAssignedMembers()){
+                            if(!members.getName().equalsIgnoreCase(this.getName())){
+                                getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Remainder is changed from " +selectedTask.getRemainder()+" to "+deadline+" by "+this.getName()+ " on " + formatter.format(date));
+                                members.getNotification().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
+                            }
+                        }
+                        selectedTask.setRemainder(deadline);
+                    }
+
+                    default -> System.out.println("\n\tWrong value. Give correct input number!\n");
+                }
+            }
+        }
+    }
+    private void viewMilestoneActivityStream(Project selectedProject){
+        int choice;
+
+        while(true){
+            if(selectedProject.getTaskArrayList().size()==1){
+                choice=1;
+                break;
+            }
+            else{
+                System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                choice = Validation.numberCheck(scanner);
+                if(choice>0 && choice<=selectedProject.getTaskArrayList().size()){
+                    break;
+                }
+                else{
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+        }
+
+        Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
+
+        if(selectedTask.getActivityStream().size() == 0){
+            System.out.println("\t\tNo Update On This Task");
+        }
+        else {
+            for(String activity : selectedTask.getActivityStream()){
+                System.out.println("\t\t\t"+activity);
+            }
+        }
+
+        System.out.println();
+        DesignModel.printLine();
+    }
+    private void viewMilestoneComments(Project selectedProject){
+        //todo
+        int choice;
+
+        while(true){
+            if(selectedProject.getTaskArrayList().size()==1){
+                choice=1;
+                break;
+            }
+            else{
+                System.out.print("\n\t\tEnter the s.no of the Task which you want to add Comments : ");
+                choice = Validation.numberCheck(scanner);
+                if(choice>0 && choice<=selectedProject.getTaskArrayList().size()){
+                    break;
+                }
+                else{
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+        }
+
+        Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
+
+        while(true){
+            if(selectedTask.getComments().size()==0){
+                System.out.println("\t\tThere are no comments for this Task");
+            }
+            else{
+                for(String string : selectedTask.getComments()){
+                    System.out.println("\t\t\t" + string);
+                }
+            }
+
+
+            System.out.println("\n\t\tDo you wan to add comments? Enter 1 to add Comments, Enter -1 to go back");
+            int ver;
+            while (true) {
+                System.out.print("\t\tEnter your choice : ");
+                ver = Validation.numberCheck(scanner);
+                if (ver == -2 || ver == 1) {
+                    break;
+                } else {
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+            if (ver == -2){
+                break;
+            } else {
+                String comment;
+                System.out.print("\t\t\tEnter your Comment : ");
+                while ((comment = scanner.nextLine()).isEmpty()) {
+                    System.out.print("Enter a Valid Task name : ");
+                }
+                selectedTask.getComments().add(comment);
+            }
+        }
+
+    }
+
     public void viewAssignedTask(){
         System.out.println();
         DesignModel.printLine();
@@ -2980,12 +3556,14 @@ public class Members {
             System.out.println("\t\t\t Enter 5 to Add Tasks To Project");
             System.out.println("\t\t\t Enter 6 to View/Update Details of Task");
             System.out.println("\t\t\t Enter 7 to Delete Task");
-            System.out.println("\t\t\t Enter 8 to Create Sub Task");
-            System.out.println("\t\t\t Enter 9 to View/Update Details of SubTask");
-            System.out.println("\t\t\t Enter 10 to Delete subTask");
-            System.out.println("\t\t\t Enter 11 for DiscussionBox");
-            System.out.println("\t\t\t Enter 12 to Add Files");
-            System.out.println("\t\t\t Enter 13 to Permission Settings");
+            System.out.println("\t\t\t Enter 8 to Add Milestone To Project");
+            System.out.println("\t\t\t Enter 9 to View/Update Details of Milestone");
+            System.out.println("\t\t\t Enter 10 to Create Sub Task");
+            System.out.println("\t\t\t Enter 11 to View/Update Details of SubTask");
+            System.out.println("\t\t\t Enter 12 to Delete subTask");
+            System.out.println("\t\t\t Enter 13 for DiscussionBox");
+            System.out.println("\t\t\t Enter 14 to Add Files");
+            System.out.println("\t\t\t Enter 15 to Permission Settings");
             System.out.println("\t\t\t Enter -1 to Logout\n");
 
             int adminChoice = -1;
@@ -3072,6 +3650,26 @@ public class Members {
                     }
                 }
                 case 8 -> {
+                    if(DataModel.getTypeOfUser().get(this.type).contains("Create Milestones")){
+                        this.createMilestone();
+                    }
+                    else{
+                        System.out.println("\n\t\t\tSorry! You don't have the access to Create Tasks In a Project");
+                        System.out.println();
+                        DesignModel.printLine();
+                    }
+                }
+                case 9 -> {
+                    if(DataModel.getTypeOfUser().get(this.type).contains("Update Milestones")){
+                        this.viewMilestone();
+                    }
+                    else{
+                        System.out.println("\n\t\t\tSorry! You don't have the access to Update Tasks Status In a Project");
+                        System.out.println();
+                        DesignModel.printLine();
+                    }
+                }
+                case 10 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
                         this.createSubTasks();
                     }
@@ -3081,7 +3679,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 9 -> {
+                case 11 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks") || DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
                         this.viewSubTask();
                     }
@@ -3091,7 +3689,7 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 10 -> {
+                case 12 -> {
                     if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
                         this.deleteSubTask();
                     }
@@ -3101,9 +3699,9 @@ public class Members {
                         DesignModel.printLine();
                     }
                 }
-                case 11 -> this.writeDiscussionBox();
-                case 12 -> this.inputFiles();
-                case 13 -> {
+                case 13 -> this.writeDiscussionBox();
+                case 14 -> this.inputFiles();
+                case 15 -> {
                     if(this.getType().equalsIgnoreCase("Manager")){
                         this.permissionSettings();
                     }
