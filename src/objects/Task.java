@@ -20,7 +20,7 @@ public class Task {
     ArrayList<String> starredComments = new ArrayList<>();
     //ArrayList<Issue> associatedIssues = new ArrayList<>();
     ArrayList<String> documents = new ArrayList<>();
-    String remainder;
+    String remainder = "No remainder";
     ArrayList<String> activityStream = new ArrayList<>();
     ArrayList<Members> assignedMembers = new ArrayList<>();
     ArrayList<Members> followers = new ArrayList<>();

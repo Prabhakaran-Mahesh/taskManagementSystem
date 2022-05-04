@@ -174,8 +174,9 @@ public class Members {
     }
 
     public String setUserType(){
+        String types;
         System.out.print("\n\t\tEnter Type name : ");
-        while ((type = scanner.nextLine()).isEmpty()) {
+        while ((types = scanner.nextLine()).isEmpty()) {
             System.out.print("Enter a Valid Name : ");
         }
 
@@ -184,7 +185,7 @@ public class Members {
             i++;
             System.out.println("\t\t"+i+". "+config);
         }
-        System.out.println("\n\t\tSelect the Permissions that you allow for the users of type " + type + "\n");
+        System.out.println("\n\t\tSelect the Permissions that you allow for the users of type " + types + "\n");
         ArrayList<String> configurations = new ArrayList<>();
 
         System.out.println("\n\t\tEnter your choices\n");
@@ -208,16 +209,16 @@ public class Members {
 
         }
 
-        DataModel.getTypeOfUser().put(type, configurations);
+        DataModel.getTypeOfUser().put(types, configurations);
         System.out.println("\t\tType of User Added Successfully!");
-        return type;
+        return types;
     }
     public void editUserType(){
         System.out.println("\n\t\tEdit User Type");
         int i=0;
         for(Members members : DataModel.getMembersArrayList()){
             i++;
-            System.out.println(i+". "+members.getName()+"\t\t"+members.getType());
+            System.out.println("\t\t"+i+". "+members.getName()+"\t\t"+members.getType());
         }
         System.out.println("\n\t\tEnter s.no of which User Type You want to change\t\tEnter -1 to go back");
         int choice;
@@ -255,9 +256,11 @@ public class Members {
                 } else if(c == 0){
                     String types = this.setUserType();
                     member.setType(types);
+                    break;
                 } else {
-                    String typeofUser = DataModel.getTypeOfUser().keySet().stream().toList().get(choice - 1);
+                    String typeofUser = DataModel.getTypeOfUser().keySet().stream().toList().get(c - 1);
                     member.setType(typeofUser);
+                    break;
                 }
             }
         }
@@ -841,7 +844,7 @@ public class Members {
 
                     System.out.print("\t\t\tEnter Name of the Task : ");
                     while ((taskName = scanner.nextLine()).isEmpty()) {
-                        System.out.print("Enter a Valid Project name : ");
+                        System.out.print("Enter a Valid Task name : ");
                     }
 
                     System.out.print("\t\t\tTask Description : ");
@@ -1043,6 +1046,33 @@ public class Members {
                         task.setRecurrance(hashMap);
                     }
 
+                    System.out.print("\t\tDo you want Remainder For this Task?! Enter 1 to yes, Enter -1 to no :");
+                    int remainder = -1;
+                    while (remainder == -1) {
+                        System.out.print("\t\t S.no: ");
+                        remainder = Validation.numberCheck(scanner);
+                        if(remainder!=-2 && remainder!=1){
+                            remainder = -1;
+                        }
+                    }
+                    String remainderDate = "";
+                    if(remainder == 1){
+                        int flag = 0;
+                        do {
+                            System.out.println("\t\t\tEnter -1 to go back");
+                            System.out.print("\t\t\tTask Remainder (Date format : dd-MM-yyyy) : ");
+                            remainderDate = scanner.next();
+                            if(remainderDate.equalsIgnoreCase("-1")){
+                                flag = 1;
+                                break;
+                            }
+
+                        } while (!Validation.dateValidation(taskDeadline));
+                        if(flag == 0) {
+                            task.setRemainder(remainderDate);
+                        }
+                    }
+
                     System.out.println("\t\tTasks Added to the Project");
                     System.out.println();
                     DesignModel.printLine();
@@ -1167,6 +1197,7 @@ public class Members {
                 System.out.println("\t\t\t Enter 3 to Task Description");
                 System.out.println("\t\t\t Enter 4 to Task Priority ");
                 System.out.println("\t\t\t Enter 5 to Task Status ");
+                System.out.println("\t\t\t Enter 6 to Task Remainder");
                 System.out.println("\t\t\t Enter -1 to Go back\n");
 
                 int updateChoice = -1;
@@ -1193,6 +1224,11 @@ public class Members {
 
                         if(Validation.messageValidation(chat)){
                             selectedTask.getActivityStream().add("The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName());
+                            for(Members members : selectedTask.getAssignedMembers()){
+                                if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getNotification().add("The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName());
+                                }
+                            }
                             selectedTask.setTaskName(chat);
 
                         }
@@ -1208,6 +1244,11 @@ public class Members {
 
                         } while (!Validation.deadlineDateValidation(selectedProject.getDeadline(), deadline));
                         selectedTask.getActivityStream().add("The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName());
+                        for(Members members : selectedTask.getAssignedMembers()){
+                            if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getNotification().add("The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName());
+                            }
+                        }
                         selectedTask.setDeadline(deadline);
                     }
 
@@ -1220,6 +1261,11 @@ public class Members {
                         System.out.print("");
 
                         selectedTask.getActivityStream().add("The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName());
+                        for(Members members : selectedTask.getAssignedMembers()){
+                            if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getNotification().add("The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName());
+                            }
+                        }
                         selectedTask.setDescription(description);
                     }
 
@@ -1251,6 +1297,11 @@ public class Members {
                         }
 
                         selectedTask.getActivityStream().add("The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName());
+                        for(Members members : selectedTask.getAssignedMembers()){
+                            if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getNotification().add("The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName());
+                            }
+                        }
                         selectedTask.setPriority(DataModel.getPriority().get(priorityChoice-1));
                     }
 
@@ -1293,6 +1344,11 @@ public class Members {
                             }
 
                             selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
+                            for(Members members : selectedTask.getAssignedMembers()){
+                                if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getNotification().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
+                                }
+                            }
                             selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
                             //selectedProject.getProgressArrayList().add(selectedTask);
                         /*if(DataModel.getTaskStatus().get(priorityChoice-1).equalsIgnoreCase("Submitted for test")){
@@ -1308,9 +1364,30 @@ public class Members {
 
                             DataModel.getTaskStatus().add(chat);
                             selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName());
+                            for(Members members : selectedTask.getAssignedMembers()){
+                                if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getNotification().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName());
+                                }
+                            }
                             selectedTask.setStatus(chat);
                         }
 
+                    }
+                    case 6 -> {
+                        System.out.println("\n\t\tCurrent Remainder date : " + selectedTask.getRemainder());
+                        String deadline;
+                        do {
+                            System.out.print("\t\t\tTask Remainder (Date format : dd-MM-yyyy) : ");
+                            deadline = scanner.next();
+
+                        } while (!Validation.dateValidation(deadline));
+                        selectedTask.getActivityStream().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
+                        for(Members members : selectedTask.getAssignedMembers()){
+                            if(!members.getName().equalsIgnoreCase(this.getName())){
+                                members.getNotification().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
+                            }
+                        }
+                        selectedTask.setRemainder(deadline);
                     }
 
                     default -> System.out.println("\n\tWrong value. Give correct input number!\n");
@@ -1485,66 +1562,116 @@ public class Members {
         }
 
         Task selectedTask = this.getAssignedTaskArrayList().get(choice-1);
+        boolean update = true;
+        while(update) {
+            System.out.println("\n\t\t\tEnter the s.no of credential you want to change!");
+            System.out.println("\t\t\t Enter 1 to Task Status ");
+            System.out.println("\t\t\t Enter 2 to Task Remainder");
+            System.out.println("\t\t\t Enter -1 to Go back\n");
 
-        if(getType().equalsIgnoreCase("Tester")){
-            System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
-            System.out.print("\t\tEnter the new New Priority S.no : ");
-            System.out.print("\n\t\t\t S.no : 1. Issue Reported");
-            System.out.print("\n\t\t\t S.no : 1. Completed");
-
-            System.out.print("\t\tChoose task Status! Enter");
-            int priorityChoice = -1;
-            while(true) {
-                while (priorityChoice == -1) {
-                    System.out.print("\t\t S.no: ");
-                    priorityChoice = Validation.numberCheck(scanner);
-                }
-
-                if (priorityChoice < 1 || priorityChoice > 2) {
-                    System.out.println("\n\t\t S.no not found!");
-                } else {
-                    break;
-                }
-            }
-            if(priorityChoice==1){
-                selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to Issue Reported by "+this.getName());
-                selectedTask.setStatus("Issue Reported");
-            } else{
-                selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to Completed by "+this.getName());
-                selectedTask.setStatus("Completed");
-            }
-        }
-        else if(getType().equalsIgnoreCase("Member")){
-            System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
-            System.out.print("\t\tEnter the new New Priority S.no : ");
-
-            int i = 0;
-            for(String m : DataModel.getTaskStatus()){
-                if(!m.equalsIgnoreCase("Completed") || !m.equalsIgnoreCase("Issue Reported")){
-                    i++;
-                    System.out.print("\n\t\t\t S.no : " + i + ". " + m);
-                }
-            }
-            System.out.println();
-            DesignModel.printLine();
-
-            System.out.print("\t\tChoose task Status! Enter");
-            int priorityChoice = -1;
-            while(true) {
-                while (priorityChoice == -1) {
-                    System.out.print("\t\t S.no: ");
-                    priorityChoice = Validation.numberCheck(scanner);
-                }
-
-                if (priorityChoice < 1 || priorityChoice > DataModel.getTaskStatus().size()-2) {
-                    System.out.println("\n\t\t S.no not found!");
-                } else {
-                    break;
-                }
+            int updateChoice = -1;
+            while(updateChoice == -1){
+                System.out.print("\t\t\t Enter your Choice : ");
+                updateChoice = Validation.numberCheck(scanner);
             }
 
-            selectedTask.getActivityStream().add("The Task Status is changed from "+selectedTask.getStatus()+" to +"+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
-            selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
+            switch (updateChoice) {
+                case -2 -> {
+                    update = false;
+
+                    System.out.println();
+                    DesignModel.printLine();
+                }
+                case 1 -> {
+                    if (getType().equalsIgnoreCase("Tester")) {
+                        System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
+                        System.out.print("\t\tEnter the new New Priority S.no : ");
+                        System.out.print("\n\t\t\t S.no : 1. Issue Reported");
+                        System.out.print("\n\t\t\t S.no : 1. Completed");
+
+                        System.out.print("\t\tChoose task Status! Enter");
+                        int priorityChoice = -1;
+                        while (true) {
+                            while (priorityChoice == -1) {
+                                System.out.print("\t\t S.no: ");
+                                priorityChoice = Validation.numberCheck(scanner);
+                            }
+
+                            if (priorityChoice < 1 || priorityChoice > 2) {
+                                System.out.println("\n\t\t S.no not found!");
+                            } else {
+                                break;
+                            }
+                        }
+                        if (priorityChoice == 1) {
+                            selectedTask.getActivityStream().add("The Task Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName());
+                            for(Members members : selectedTask.getAssignedMembers()){
+                                if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getNotification().add("The Task Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName());
+                                }
+                            }
+                            selectedTask.setStatus("Issue Reported");
+                        } else {
+                            selectedTask.getActivityStream().add("The Task Status is changed from " + selectedTask.getStatus() + " to Completed by " + this.getName());
+                            for(Members members : selectedTask.getAssignedMembers()){
+                                if(!members.getName().equalsIgnoreCase(this.getName())){
+                                    members.getNotification().add("The Task Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName());
+                                }
+                            }
+                            selectedTask.setStatus("Completed");
+                        }
+                    } else if (getType().equalsIgnoreCase("Member")) {
+                        System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
+                        System.out.print("\t\tEnter the new New Priority S.no : ");
+
+                        int i = 0;
+                        for (String m : DataModel.getTaskStatus()) {
+                            if (!m.equalsIgnoreCase("Completed") || !m.equalsIgnoreCase("Issue Reported")) {
+                                i++;
+                                System.out.print("\n\t\t\t S.no : " + i + ". " + m);
+                            }
+                        }
+                        System.out.println();
+                        DesignModel.printLine();
+
+                        System.out.print("\t\tChoose task Status! Enter");
+                        int priorityChoice = -1;
+                        while (true) {
+                            while (priorityChoice == -1) {
+                                System.out.print("\t\t S.no: ");
+                                priorityChoice = Validation.numberCheck(scanner);
+                            }
+
+                            if (priorityChoice < 1 || priorityChoice > DataModel.getTaskStatus().size() - 2) {
+                                System.out.println("\n\t\t S.no not found!");
+                            } else {
+                                break;
+                            }
+                        }
+
+                        selectedTask.getActivityStream().add("The Task Status is changed from " + selectedTask.getStatus() + " to +" + DataModel.getTaskStatus().get(priorityChoice - 1) + " by " + this.getName());
+                        selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice - 1));
+                    }
+                }
+                case 2 -> {
+                    System.out.println("\n\t\tCurrent Remainder date : " + selectedTask.getRemainder());
+                    String deadline;
+                    do {
+                        System.out.print("\t\t\tTask Remainder (Date format : dd-MM-yyyy) : ");
+                        deadline = scanner.next();
+
+                    } while (!Validation.dateValidation(deadline));
+                    selectedTask.getActivityStream().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
+                    for(Members members : selectedTask.getAssignedMembers()){
+                        if(!members.getName().equalsIgnoreCase(this.getName())){
+                            members.getNotification().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
+                        }
+                    }
+                    selectedTask.setRemainder(deadline);
+                }
+
+                default -> System.out.println("\n\tWrong value. Give correct input number!\n");
+            }
         }
     }
     private void viewAssignedActivityStream(){
@@ -2734,8 +2861,11 @@ public class Members {
 
         }
     }
-    public void showNotifications(){
+    public void showNotifications() {
         System.out.println("\n\t\t\tShow Notifications : \n");
+        for(String notify : this.getNotification()){
+            System.out.println("\t\t\t"+ notify);
+        }
     }
     public void viewDashboard(){
         System.out.println("\n\t\tDashboard!\n");
@@ -2817,7 +2947,12 @@ public class Members {
                 }
                 case 2 -> {
                     if(this.getType().equalsIgnoreCase("Manager")){
-                        this.permissionSettings();
+                        this.editUserType();
+                    }
+                    else{
+                        System.out.println("\n\t\t\tSorry! You don't have the access to Change user Type");
+                        System.out.println();
+                        DesignModel.printLine();
                     }
                 }
                 case 3 -> {
@@ -2907,7 +3042,12 @@ public class Members {
                 case 12 -> this.inputFiles();
                 case 13 -> {
                     if(this.getType().equalsIgnoreCase("Manager")){
-                        this.editUserType();
+                        this.permissionSettings();
+                    }
+                    else{
+                        System.out.println("\n\t\t\tSorry! You don't have the access to Permission Settings");
+                        System.out.println();
+                        DesignModel.printLine();
                     }
                 }
                 default -> System.out.println("\n\tWrong value. Give correct input number!\n");
