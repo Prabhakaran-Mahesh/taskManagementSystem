@@ -1652,7 +1652,7 @@ public class Members {
                         }
                     }
                     task = new Milestone(taskName, selectedProject.getProjectOwner(), taskDescription, taskDeadline, DataModel.getPriority().get(priorityChoice - 1));
-                    selectedProject.getTaskArrayList().add(task);
+                    selectedProject.getMileStonesArrayList().add(task);
 
                     System.out.println("\t\tEnter the List of Tasks for the Milestone\n");
                     i = 0;
@@ -1729,19 +1729,19 @@ public class Members {
 
             Project selectedProject = projectArrayList.get(choice - 1);
 
-            if (selectedProject.getTaskArrayList().size() == 0) {
+            if (selectedProject.getMileStonesArrayList().size() == 0) {
                 System.out.println("\t\t\tNo task is created yet!");
             } else {
                 int i = 0;
                 System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
-                for (Task task : selectedProject.getTaskArrayList()) {
+                for (Milestone task : selectedProject.getMileStonesArrayList()) {
                     i++;
                     System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
                 }
 
                 DesignModel.printLine();
 
-                System.out.println("\n\t\tEnter 1 to update Task Details,\n\t\tEnter 2 to view Activity Stream,\n\t\tEnter 3 to Comments,\n\t\tEnter -1 to go back");
+                System.out.println("\n\t\tEnter 1 to update Milestones Details,\n\t\tEnter 2 to view Activity Stream of MileStone,\n\t\tEnter 3 to View/Add comments on Milestone,\n\t\tEnter -1 to go back");
                 int ver;
                 while (true) {
                     System.out.print("\t\tEnter your choice : ");
@@ -1754,13 +1754,13 @@ public class Members {
                 }
 
                 if (ver == 1) {
-                    updateTaskDetails(selectedProject);
+                    updateMilestoneDetails(selectedProject);
                 }
 
                 else if(ver == 2){
-                    this.viewActivityStream(selectedProject);
+                    this.viewMilestoneActivityStream(selectedProject);
                 } else if (ver == 3) {
-                    this.viewComments(selectedProject);
+                    this.viewMilestoneComments(selectedProject);
                 }
             }
         }
