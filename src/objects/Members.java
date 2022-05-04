@@ -2066,14 +2066,14 @@ public class Members {
         int choice;
 
         while(true){
-            if(selectedProject.getTaskArrayList().size()==1){
+            if(selectedProject.getMileStonesArrayList().size()==1){
                 choice=1;
                 break;
             }
             else{
-                System.out.print("\n\t\tEnter the s.no of the Task which you want to add Comments : ");
+                System.out.print("\n\t\tEnter the s.no of the Milestone which you want to add Comments : ");
                 choice = Validation.numberCheck(scanner);
-                if(choice>0 && choice<=selectedProject.getTaskArrayList().size()){
+                if(choice>0 && choice<=selectedProject.getMileStonesArrayList().size()){
                     break;
                 }
                 else{
@@ -2083,11 +2083,11 @@ public class Members {
 
         }
 
-        Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
+        Task selectedTask = selectedProject.getMileStonesArrayList().get(choice-1);
 
         while(true){
             if(selectedTask.getComments().size()==0){
-                System.out.println("\t\tThere are no comments for this Task");
+                System.out.println("\t\tThere are no comments for this Milestone");
             }
             else{
                 for(String string : selectedTask.getComments()){
