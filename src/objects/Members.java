@@ -2,18 +2,15 @@ package objects;
 
 import activities.Validation;
 import activities.WelcomePage;
+import com.opencsv.CSVWriter;
 import models.DataModel;
 import models.DesignModel;
 
-
-import javax.xml.crypto.Data;
 import java.io.File;
-import java.lang.reflect.Member;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class Members {
     String name;
@@ -3362,8 +3359,8 @@ public class Members {
                 this.setUserType();
             } else{
                 String typeofUser = DataModel.getTypeOfUser().keySet().stream().toList().get(choice-1);
-                System.out.println("\n\t\t\tEnter 1 to Remove Permission.\t\t\tEnter 2 to Add Permission");
                 while(true){
+                    System.out.println("\n\t\t\tEnter 1 to Remove Permission.\t\t\tEnter 2 to Add Permission");
                     int choices;
                     do {
                         System.out.print("\n\t\tEnter your choice : ");
@@ -3392,6 +3389,7 @@ public class Members {
                                 for(int index : indexes){
                                     DataModel.getTypeOfUser().get(typeofUser).remove(index);
                                 }
+                                System.out.println("\t\tPermission Removing completed!\n");
                                 break;
                             } else {
                                 indexes.add(c-1);
@@ -3583,7 +3581,88 @@ public class Members {
         }
     }
     public int decideKanbanview(){
-        return 0;
+        int decide = 0;
+        listviewByStatus();
+        System.out.println("\n\t\tEnter 1. to Show by status. \n\t\tEnter 2. to Show by Priority. \n\t\tEnter -1. to go back");
+        while (true) {
+            System.out.print("\t\tEnter your choice : ");
+            decide = Validation.numberCheck(scanner);
+            if (decide == -2 || decide == 1 || decide == 2) {
+                break;
+            } else {
+                System.out.println("\t\tWrong input");
+            }
+        }
+        if(decide == 1 || decide == -2){
+            return 2;
+        }
+        else{
+            return 4;
+        }
+    }
+
+    public void exportTasks() {
+        System.out.println();
+        DesignModel.printLine();
+
+        System.out.println("\t\tView the Project tasks");
+        System.out.println();
+
+        if (projectArrayList.size() == 0) {
+            System.out.print("\t\tNo Projects found!\n");
+            DesignModel.printLine();
+        } else {
+            int choice;
+            if (projectArrayList.size() == 1) {
+                choice = 1;
+            } else {
+                System.out.printf("\n\t\t%15s %15s %15s %25s %35s\n", "S.no", "ProjectName", "Deadline", "Status", "Description");
+                int i = 0;
+                for (Project project : projectArrayList) {
+
+                    i++;
+                    System.out.printf("\t\t%15s %15s %15s %25s %35s\n", i, project.getProjectName(), project.getDeadline(), project.getStatus(), project.getProjectDescription());
+                }
+                DesignModel.printLine();
+
+
+                while (true) {
+                    System.out.print("\n\t\tEnter the s.no of the Project which you want to View Tasks : ");
+                    choice = Validation.numberCheck(scanner);
+                    if (choice > 0 && choice <= projectArrayList.size()) {
+                        break;
+                    } else {
+                        System.out.println("\t\tWrong input");
+                    }
+                }
+            }
+
+            Project selectedProject = projectArrayList.get(choice - 1);
+
+            File file = new File("E:/Java/projects/taskManagementSystem/src/files/export.csv");
+
+            try {
+
+                // create FileWriter object with file as parameter
+                FileWriter outputfile = new FileWriter(file);
+
+                // create CSVWriter object filewriter object as parameter
+                CSVWriter writer = new CSVWriter(outputfile);
+
+                // create a List which contains String array
+                List<String[]> data = new ArrayList<>();
+                for(Task t : selectedProject.getTaskArrayList()){
+                    data.add(new String[] {t.taskName, t.taskOwner.getName(), t.description, t.deadline, t.priority});
+                }
+                writer.writeAll(data);
+
+                // closing writer connection
+                writer.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void workOfMember(){
@@ -3622,6 +3701,7 @@ public class Members {
             System.out.println("\t\t\t Enter 14 for DiscussionBox");
             System.out.println("\t\t\t Enter 15 to Add Files");
             System.out.println("\t\t\t Enter 16 to Permission Settings");
+            System.out.println("\t\t\t Enter 17 to export Tasks as CSV file");
             System.out.println("\t\t\t Enter -1 to Logout\n");
 
             int adminChoice = -1;
@@ -3782,6 +3862,16 @@ public class Members {
                     }
                     else{
                         System.out.println("\n\t\t\tSorry! You don't have the access to Permission Settings");
+                        System.out.println();
+                        DesignModel.printLine();
+                    }
+                }
+                case 17 -> {
+                    if(DataModel.getTypeOfUser().get(this.type).contains("Export Tasks")){
+                        this.exportTasks();
+                    }
+                    else{
+                        System.out.println("\n\t\t\tSorry! You don't have the access to Export tasks");
                         System.out.println();
                         DesignModel.printLine();
                     }

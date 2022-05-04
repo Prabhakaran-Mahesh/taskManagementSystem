@@ -146,6 +146,7 @@ public class DataModel {
         configurations.add("Test");
         configurations.add("Create Milestones");
         configurations.add("Update Milestones");
+        configurations.add("Export Tasks");
     }
 
     public static HashMap<String, ArrayList<String>> getTypeOfUser() {
