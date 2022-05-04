@@ -1257,6 +1257,9 @@ public class Members {
                                     members.getNotification().add("The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName());
                                 }
                             }
+                            for(Milestone milestone : selectedTask.getAssociatedMilestones()){
+                                milestone.getActivityStream().add("The Task Name is changed from "+selectedTask.getTaskName()+" to "+chat+" by "+this.getName());
+                            }
                             selectedTask.setTaskName(chat);
 
                         }
@@ -1278,6 +1281,9 @@ public class Members {
                                 members.getNotification().add("The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName());
                             }
                         }
+                        for(Milestone milestone : selectedTask.getAssociatedMilestones()){
+                            milestone.getActivityStream().add(selectedTask.getTaskName() + ":-> The Task Deadline is changed from "+selectedTask.getDeadline()+" to "+deadline+" by "+this.getName());
+                        }
                         selectedTask.setDeadline(deadline);
                     }
 
@@ -1295,6 +1301,9 @@ public class Members {
                                 members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName() + " on " + formatter.format(date));
                                 members.getNotification().add("The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName());
                             }
+                        }
+                        for(Milestone milestone : selectedTask.getAssociatedMilestones()){
+                            milestone.getActivityStream().add(selectedTask.getTaskName() + ":-> The Task Description is changed from "+selectedTask.getDescription()+" to "+description+" by "+this.getName());
                         }
                         selectedTask.setDescription(description);
                     }
@@ -1332,6 +1341,9 @@ public class Members {
                                 members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName() + " on " + formatter.format(date));
                                 members.getNotification().add("The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName());
                             }
+                        }
+                        for(Milestone milestone : selectedTask.getAssociatedMilestones()){
+                            milestone.getActivityStream().add(selectedTask.getTaskName() + ":-> The Task Priority is changed from "+selectedTask.getPriority()+" to "+DataModel.getPriority().get(priorityChoice-1)+" by "+this.getName());
                         }
                         selectedTask.setPriority(DataModel.getPriority().get(priorityChoice-1));
                     }
@@ -1381,6 +1393,9 @@ public class Members {
                                     members.getNotification().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
                                 }
                             }
+                            for(Milestone milestone : selectedTask.getAssociatedMilestones()){
+                                milestone.getActivityStream().add(selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName());
+                            }
                             selectedTask.getTaskOwner().getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName()+ " on " + formatter.format(date));
                             selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
                             //selectedProject.getProgressArrayList().add(selectedTask);
@@ -1403,6 +1418,9 @@ public class Members {
                                     members.getNotification().add("The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName());
                                 }
                             }
+                            for(Milestone milestone : selectedTask.getAssociatedMilestones()){
+                                milestone.getActivityStream().add(selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName());
+                            }
                             selectedTask.getTaskOwner().getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+chat+" by "+this.getName()+ " on " + formatter.format(date));
                             selectedTask.setStatus(chat);
                         }
@@ -1419,9 +1437,12 @@ public class Members {
                         selectedTask.getActivityStream().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
                         for(Members members : selectedTask.getAssignedMembers()){
                             if(!members.getName().equalsIgnoreCase(this.getName())){
-                                getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Remainder is changed from " +selectedTask.getRemainder()+" to "+deadline+" by "+this.getName()+ " on " + formatter.format(date));
+                                members.getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Remainder is changed from " +selectedTask.getRemainder()+" to "+deadline+" by "+this.getName()+ " on " + formatter.format(date));
                                 members.getNotification().add("The Task Remainder is changed from "+selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
                             }
+                        }
+                        for(Milestone milestone : selectedTask.getAssociatedMilestones()){
+                            milestone.getActivityStream().add(selectedTask.getTaskName() + ":->The Task Remainder is changed from " +selectedTask.getRemainder()+" to "+deadline+" by "+this.getName());
                         }
                         selectedTask.setRemainder(deadline);
                     }
@@ -1526,7 +1547,6 @@ public class Members {
         }
 
     }
-
     public void createMilestone(){
         //ArrayList<Task> taskArrayList = new ArrayList<>();
 
@@ -1672,6 +1692,7 @@ public class Members {
                             System.out.println("\n\t\tTask not found! Enter the correct S.no");
                         } else {
                             task.getMilestoneTasksArrayList().add(selectedProject.getTaskArrayList().get(mem-1));
+                            selectedProject.getTaskArrayList().get(mem-1).getAssociatedMilestones().add(task);
                         }
                     }
 
@@ -1769,14 +1790,14 @@ public class Members {
         int choice;
 
         while(true){
-            if(selectedProject.getTaskArrayList().size()==1){
+            if(selectedProject.getMileStonesArrayList().size()==1){
                 choice=1;
                 break;
             }
             else{
-                System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                System.out.print("\n\t\tEnter the s.no of the Milestone which you want to update : ");
                 choice = Validation.numberCheck(scanner);
-                if(choice>0 && choice<=selectedProject.getTaskArrayList().size()){
+                if(choice>0 && choice<=selectedProject.getMileStonesArrayList().size()){
                     break;
                 }
                 else{
@@ -1786,20 +1807,19 @@ public class Members {
 
         }
 
-        Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
+        Milestone selectedTask = selectedProject.getMileStonesArrayList().get(choice-1);
 
-        if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")){
+        if(DataModel.getTypeOfUser().get(this.type).contains("Update Milestones")){
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date = new Date();
             boolean update = true;
             while(update){
                 System.out.println("\n\t\t\tEnter the s.no of credential you want to change!");
-                System.out.println("\t\t\t Enter 1 to Task Name ");
-                System.out.println("\t\t\t Enter 2 to Task Deadline");
-                System.out.println("\t\t\t Enter 3 to Task Description");
-                System.out.println("\t\t\t Enter 4 to Task Priority ");
-                System.out.println("\t\t\t Enter 5 to Task Status ");
-                System.out.println("\t\t\t Enter 6 to Task Remainder");
+                System.out.println("\t\t\t Enter 1 to Milestone Name ");
+                System.out.println("\t\t\t Enter 2 to Milestone Deadline");
+                System.out.println("\t\t\t Enter 3 to Milestone Description");
+                System.out.println("\t\t\t Enter 4 to Milestone Priority ");
+                System.out.println("\t\t\t Enter 5 to Milestone Status ");
                 System.out.println("\t\t\t Enter -1 to Go back\n");
 
                 int updateChoice = -1;
@@ -2010,14 +2030,14 @@ public class Members {
         int choice;
 
         while(true){
-            if(selectedProject.getTaskArrayList().size()==1){
+            if(selectedProject.getMileStonesArrayList().size()==1){
                 choice=1;
                 break;
             }
             else{
-                System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                System.out.print("\n\t\tEnter the s.no of the Milestone which you want to update : ");
                 choice = Validation.numberCheck(scanner);
-                if(choice>0 && choice<=selectedProject.getTaskArrayList().size()){
+                if(choice>0 && choice<=selectedProject.getMileStonesArrayList().size()){
                     break;
                 }
                 else{
@@ -2027,7 +2047,7 @@ public class Members {
 
         }
 
-        Task selectedTask = selectedProject.getTaskArrayList().get(choice-1);
+        Milestone selectedTask = selectedProject.getMileStonesArrayList().get(choice-1);
 
         if(selectedTask.getActivityStream().size() == 0){
             System.out.println("\t\tNo Update On This Task");

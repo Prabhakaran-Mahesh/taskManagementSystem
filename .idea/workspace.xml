@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="Added Workflow to dashboard">
-      <change afterPath="$PROJECT_DIR$/src/objects/Milestone.java" afterDir="false" />
+    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="View milestone completed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/objects/Members.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Members.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/objects/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Task.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +144,21 @@
       <option name="project" value="LOCAL" />
       <updated>1651646991139</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Create milestone completed">
+      <created>1651656123913</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1651656123913</updated>
+    </task>
+    <task id="LOCAL-00013" summary="View milestone completed">
+      <created>1651656357485</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1651656357485</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -171,6 +184,8 @@
     <MESSAGE value="Added Member Notifications" />
     <MESSAGE value="Added Manager Notifications" />
     <MESSAGE value="Added Workflow to dashboard" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Workflow to dashboard" />
+    <MESSAGE value="Create milestone completed" />
+    <MESSAGE value="View milestone completed" />
+    <option name="LAST_COMMIT_MESSAGE" value="View milestone completed" />
   </component>
 </project>

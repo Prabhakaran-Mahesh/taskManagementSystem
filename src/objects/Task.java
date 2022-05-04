@@ -25,6 +25,7 @@ public class Task {
     ArrayList<Members> assignedMembers = new ArrayList<>();
     ArrayList<Members> followers = new ArrayList<>();
     ArrayList<String> forums = new ArrayList<>();
+    ArrayList<Milestone> associatedMilestones = new ArrayList<>();
     String links;
 
     public Task(String taskName, Members taskOwner, String description, String deadline, String priority) {
@@ -227,6 +228,14 @@ public class Task {
 
     public void setLinks(String links) {
         this.links = links;
+    }
+
+    public ArrayList<Milestone> getAssociatedMilestones() {
+        return associatedMilestones;
+    }
+
+    public void setAssociatedMilestones(ArrayList<Milestone> associatedMilestones) {
+        this.associatedMilestones = associatedMilestones;
     }
 }
 
