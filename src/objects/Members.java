@@ -1482,7 +1482,15 @@ public class Members {
                             }
                             selectedTask.getTaskOwner().getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName()+ " on " + formatter.format(date));
                             selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
-                            //selectedProject.getProgressArrayList().add(selectedTask);
+
+                            if(selectedTask.getStatus().equalsIgnoreCase("Submitted for test")){
+                                for(Members members : selectedProject.getTeamMemberArrayList()){
+                                    if(members.getType().equalsIgnoreCase("Tester")){
+                                        members.getAssignedTaskArrayList().add(selectedTask);
+                                        members.getNotification().add("\t\t\tTask -> " +selectedTask.getTaskName()+ " Added for testing!");
+                                    }
+                                }
+                            }
                         }
                         else{
                             System.out.print("\t\tEnter the custom Status : ");
@@ -2330,6 +2338,15 @@ public class Members {
                         }
                         selectedTask.getActivityStream().add("The Task Status is changed from " + selectedTask.getStatus() + " to +" + DataModel.getTaskStatus().get(priorityChoice - 1) + " by " + this.getName());
                         selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice - 1));
+
+                        if(selectedTask.getStatus().equalsIgnoreCase("Submitted for test")){
+                            for(Members members : this.getProjectArrayList().get(0).getTeamMemberArrayList()){
+                                if(members.getType().equalsIgnoreCase("Tester")){
+                                    members.getAssignedTaskArrayList().add(selectedTask);
+                                    members.getNotification().add("\t\t\tTask -> " +selectedTask.getTaskName()+ " Added for testing!");
+                                }
+                            }
+                        }
                     }
                 }
                 case 2 -> {
@@ -3049,6 +3066,14 @@ public class Members {
 
                             selectedSubTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
                             //selectedProject.getProgressArrayList().add(selectedTask);
+                            if(selectedSubTask.getStatus().equalsIgnoreCase("Submitted for test")){
+                                for(Members members : this.getProjectArrayList().get(0).getTeamMemberArrayList()){
+                                    if(members.getType().equalsIgnoreCase("Tester")){
+                                        members.getAssignedTaskArrayList().add(selectedTask);
+                                        members.getNotification().add("\t\t\tTask -> " +selectedTask.getTaskName()+ " Added for testing!");
+                                    }
+                                }
+                            }
                         }
                         else{
                             System.out.print("\t\tEnter the custom Status : ");
