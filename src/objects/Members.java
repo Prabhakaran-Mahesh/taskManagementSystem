@@ -106,6 +106,73 @@ public class Members {
         this.workflow = workflow;
     }
 
+    public void sampleProject(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        ArrayList<Members>membersArrayList = new ArrayList<>();
+        for(Members members : DataModel.getMembersArrayList()){
+            if(!members.getType().equalsIgnoreCase("Manager")){
+                membersArrayList.add(members);
+            }
+        }
+
+        membersArrayList.get(0).setType("Teamlead");
+        membersArrayList.get(1).setType("Tester");
+
+        Project project = new Project("Project1", this, "This is project 1", "07-01-2023", membersArrayList);
+
+        System.out.println("\n\t\tProject created!");
+
+        for(Members m : membersArrayList){
+            m.getProjectArrayList().add(project);
+            m.getWorkflow().add("Project : "+ "Project1" + " has been Created! on "+ formatter.format(date));
+        }
+        projectArrayList.add(project);
+        getWorkflow().add("Project : "+ "Project1" + " has been Created! on "+ formatter.format(date));
+        DesignModel.printLine();
+
+
+        Task task1 = new Task("Task1", project.getProjectOwner(), "This is task 1", "-", DataModel.getPriority().get(0));
+        project.getTaskArrayList().add(task1);
+        for(Members members : membersArrayList){
+            members.getAssignedTaskArrayList().add(task1);
+            task1.getAssignedMembers().add(members);
+            members.getNotification().add("\t\t\tTask ->" + task1.getTaskName() + " Added!");
+        }
+
+        Task task2 = new Task("Task2", project.getProjectOwner(), "This is task 2", "-", DataModel.getPriority().get(1));
+        project.getTaskArrayList().add(task2);
+        for(Members members : membersArrayList){
+            members.getAssignedTaskArrayList().add(task2);
+            task2.getAssignedMembers().add(members);
+            members.getNotification().add("\t\t\tTask ->" + task2.getTaskName() + " Added!");
+        }
+
+        Task task3 = new Task("Task3", project.getProjectOwner(), "This is task 3", "-", DataModel.getPriority().get(2));
+        project.getTaskArrayList().add(task3);
+        for(Members members : membersArrayList){
+            members.getAssignedTaskArrayList().add(task3);
+            task3.getAssignedMembers().add(members);
+            members.getNotification().add("\t\t\tTask ->" + task3.getTaskName() + " Added!");
+        }
+
+        Task task4 = new Task("Task4", project.getProjectOwner(), "This is task 1", "-", DataModel.getPriority().get(3));
+        project.getTaskArrayList().add(task4);
+        for(Members members : membersArrayList){
+            members.getAssignedTaskArrayList().add(task4);
+            task4.getAssignedMembers().add(members);
+            members.getNotification().add("\t\t\tTask ->" + task4.getTaskName() + " Added!");
+        }
+
+        Task task5 = new Task("Task5", project.getProjectOwner(), "This is task 5", "-", DataModel.getPriority().get(0));
+        project.getTaskArrayList().add(task5);
+        for(Members members : membersArrayList){
+            members.getAssignedTaskArrayList().add(task5);
+            task5.getAssignedMembers().add(members);
+            members.getNotification().add("\t\t\tTask ->" + task5.getTaskName() + " Added!");
+        }
+    }
+
     public void exitVerification(){
         String exit;
         while(true){
@@ -996,6 +1063,7 @@ public class Members {
                         } else {
                             selectedProject.getTeamMemberArrayList().get(mem - 1).getAssignedTaskArrayList().add(task);
                             task.getAssignedMembers().add(selectedProject.getTeamMemberArrayList().get(mem - 1));
+                            selectedProject.getTeamMemberArrayList().get(mem - 1).getNotification().add("\t\t\tTask ->" + task.getTaskName() + " Added!");
                         }
                     }
 
@@ -3425,7 +3493,9 @@ public class Members {
                             }
                         }
 
-                    } else {
+                    } else if(choices == -2){
+                        break;
+                    }else{
                         System.out.println("\t\tEnter correct number!");
                         choices = -1;
                     }
@@ -3461,6 +3531,8 @@ public class Members {
                     this.getNotification().add("\t\t"+task.getTaskName()+"\t\tStatus : "+task.getStatus());
                 }
             }
+
+
         }
     }
     public void showWorkflow(){
@@ -3474,6 +3546,7 @@ public class Members {
         System.out.println("\n\t\tDashboard!\n");
         if(this.getType().equalsIgnoreCase("Manager")){
             this.showManagerNotification();
+            this.showNotifications();
             this.showListOfProjects();
         }
         else{
@@ -3509,8 +3582,8 @@ public class Members {
             for(Project project : getProjectArrayList()){
                 for(Task task : project.getTaskArrayList()) {
                     if (task.getStatus().equalsIgnoreCase(status)) {
-                        System.out.print(project.getProjectName() + " : -> ");
-                        System.out.printf("\t\t\t\t%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                        System.out.print("\t\t\t\t"+project.getProjectName() + " : -> ");
+                        System.out.printf("%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
                     }
                 }
             }
@@ -3523,8 +3596,8 @@ public class Members {
             for(Project project : getProjectArrayList()){
                 for(Task task : project.getTaskArrayList()) {
                     if (task.getPriority().equalsIgnoreCase(status)) {
-                        System.out.print(project.getProjectName() + " : -> ");
-                        System.out.printf("\t\t\t\t%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                        System.out.print("\t\t\t\t"+project.getProjectName() + " : -> ");
+                        System.out.printf("%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
                     }
                 }
             }
@@ -3537,8 +3610,8 @@ public class Members {
             for(Project project : getProjectArrayList()){
                 for(Task task : project.getTaskArrayList()) {
                     if (task.getStatus().equalsIgnoreCase(status)) {
-                        System.out.print(project.getProjectName() + " : -> ");
-                        System.out.printf("\t\t\t\t%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                        System.out.print("\t\t\t\t"+project.getProjectName() + " : -> ");
+                        System.out.printf("%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
                     }
                 }
             }
@@ -3552,7 +3625,7 @@ public class Members {
             for(Project project : getProjectArrayList()){
                 for(Task task : project.getTaskArrayList()) {
                     if (task.getPriority().equalsIgnoreCase(status)) {
-                        System.out.print(project.getProjectName() + " : -> ");
+                        System.out.print("\t\t\t\t"+project.getProjectName() + " : -> ");
                         System.out.printf("\t\t\t\t%15s %15s %20s %25s %25s\n", task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
                     }
                 }
@@ -3582,7 +3655,7 @@ public class Members {
     }
     public int decideKanbanview(){
         int decide = 0;
-        listviewByStatus();
+        kanbanViewByStatus();
         System.out.println("\n\t\tEnter 1. to Show by status. \n\t\tEnter 2. to Show by Priority. \n\t\tEnter -1. to go back");
         while (true) {
             System.out.print("\t\tEnter your choice : ");
@@ -3667,6 +3740,9 @@ public class Members {
 
     public void workOfMember(){
         System.out.println("\n\t\tWelcome : " + this.getName().toUpperCase());
+        if(this.type.equalsIgnoreCase("Manager") && this.projectArrayList.size()==0){
+            this.sampleProject();
+        }
         int dash = 0;
 
         while(true) {

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="Dashboard Completed">
+    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="Permissions error corrected">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/DataModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/DataModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/objects/Members.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Members.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/taskManagementSystem.iml" beforeDir="false" afterPath="$PROJECT_DIR$/taskManagementSystem.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,16 +31,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/admin/Downloads/opencsv-5.6.jar",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/admin/Downloads/opencsv-5.6.jar&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Java\projects\taskManagementSystem\src\files" />
@@ -197,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651664026236</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Permissions error corrected">
+      <created>1651668752354</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1651668752354</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -230,6 +235,7 @@
     <MESSAGE value="Milestone Completed" />
     <MESSAGE value="List view and Kanban board created" />
     <MESSAGE value="Dashboard Completed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dashboard Completed" />
+    <MESSAGE value="Permissions error corrected" />
+    <option name="LAST_COMMIT_MESSAGE" value="Permissions error corrected" />
   </component>
 </project>
