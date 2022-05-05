@@ -106,6 +106,7 @@ public class Members {
         this.workflow = workflow;
     }
 
+    // This function is used to create a sample project with 5 tasks. so that i dont want to create project each time i run.
     public void sampleProject(){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
@@ -173,6 +174,7 @@ public class Members {
         }
     }
 
+    // This function is used to logout verification of a user
     public void exitVerification(){
         String exit;
         while(true){
@@ -189,8 +191,6 @@ public class Members {
         }
 
         if("yes".equalsIgnoreCase(exit)){
-            //Todo: report sending
-            //sendReport();
             System.out.println();
             DesignModel.printLine();
             WelcomePage.loginDisplay();
@@ -203,6 +203,8 @@ public class Members {
 
         }
     }
+
+    // This function is used to change the user password
     public void changePassword(){
         String oldPassword, newPassword;
         System.out.println();
@@ -224,8 +226,10 @@ public class Members {
             DesignModel.printLine();
         }
     }
+
+    // This function is used to add members to the organisation
     public void addMembersToTheCompany(){
-        String name, password, email, type;
+        String name, password, email;
 
         System.out.println();
         DesignModel.printLine();
@@ -249,6 +253,7 @@ public class Members {
         DesignModel.printLine();
     }
 
+    // This function is used to create a user type
     public String setUserType(){
         String types;
         System.out.print("\n\t\tEnter Type name : ");
@@ -289,6 +294,8 @@ public class Members {
         System.out.println("\t\tType of User Added Successfully!");
         return types;
     }
+
+    // This function is used to edit user type according to the input. Each user type.
     public void editUserType(){
         System.out.println("\n\t\tEdit User Type");
         int i=0;
@@ -320,7 +327,7 @@ public class Members {
                     }
                 }
                 System.out.println("\n\t\t Enter the S.no of User Type who you want to edit Permissions.\n\t\t Enter 0 to add new user Type.\n\t\t Enter -1 to go back");
-                int c = 0;
+                int c;
                 do {
                     System.out.print("\n\t\tEnter your choice : ");
                     c = Validation.numberCheck(scanner);
@@ -341,6 +348,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used to create projects for the managers respective organisation
     public void createProjects(){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
@@ -584,6 +593,8 @@ public class Members {
         getWorkflow().add("Project : "+ projectName + " has been Created! on "+ formatter.format(date));
         DesignModel.printLine();
     }
+
+    // This function is used to add excess members to the project. after creating the project
     public void addMembersToProject(Project selectedProject){
         System.out.println();
         DesignModel.printLine();
@@ -632,6 +643,7 @@ public class Members {
 
     }
 
+    // This function is used to edit the project details like name, desc, status..
     public void editProjectDetails(){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
@@ -835,6 +847,8 @@ public class Members {
         }
 
     }
+
+    //This function is used to view the list of projects
     public void viewProjects(){
         System.out.println();
         DesignModel.printLine();
@@ -874,6 +888,8 @@ public class Members {
         }
 
     }
+
+    // This function is used to create tasks in a project. Main and important function of the task management system
     public void createTasks(){
         //ArrayList<Task> taskArrayList = new ArrayList<>();
 
@@ -1119,8 +1135,8 @@ public class Members {
                         }
                     }
 
+                    HashMap<String, Integer> hashMap = new HashMap<>();
                     if(recurranceChoice != 1){
-                        HashMap<String, Integer> hashMap = new HashMap<>();
                         System.out.print("\t\t\tEnter recurrance Count. Enter 0 for Infinite Recurrance :");
                         int count = -1;
                         while (count == -1) {
@@ -1129,13 +1145,11 @@ public class Members {
                         }
 
                         hashMap.put(DataModel.getRecurringTaskType().get(recurranceChoice-1), count);
-                        task.setRecurrance(hashMap);
                     }
                     else{
-                        HashMap<String, Integer> hashMap = new HashMap<>();
-                        hashMap.put(DataModel.getRecurringTaskType().get(recurranceChoice-1), -1);
-                        task.setRecurrance(hashMap);
+                        hashMap.put(DataModel.getRecurringTaskType().get(0), -1);
                     }
+                    task.setRecurrance(hashMap);
 
                     System.out.print("\t\tDo you want Remainder For this Task?! Enter 1 to yes, Enter -1 to no :");
                     int remainder = -1;
@@ -1146,7 +1160,7 @@ public class Members {
                             remainder = -1;
                         }
                     }
-                    String remainderDate = "";
+                    String remainderDate;
                     if(remainder == 1){
                         int flag = 0;
                         do {
@@ -1179,6 +1193,8 @@ public class Members {
         }
 
     }
+
+    // This function is used to view the list of tasks in a project
     public void viewTask(){
         System.out.println();
         DesignModel.printLine();
@@ -1256,6 +1272,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used to update the task details
     private void updateTaskDetails(Project selectedProject){
         int choice;
 
@@ -1465,9 +1483,6 @@ public class Members {
                             selectedTask.getTaskOwner().getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName()+ " on " + formatter.format(date));
                             selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
                             //selectedProject.getProgressArrayList().add(selectedTask);
-                        /*if(DataModel.getTaskStatus().get(priorityChoice-1).equalsIgnoreCase("Submitted for test")){
-                            selectedProject.getTester().getAssignedTasks().add(selectedTask);
-                        }*/
                         }
                         else{
                             System.out.print("\t\tEnter the custom Status : ");
@@ -1518,6 +1533,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used to view activity stream of a particular task
     private void viewActivityStream(Project selectedProject){
         int choice;
 
@@ -1553,8 +1570,9 @@ public class Members {
         System.out.println();
         DesignModel.printLine();
     }
+
+    // this function is used to view comments of a particular project
     private void viewComments(Project selectedProject){
-        //todo
         int choice;
 
         while(true){
@@ -1613,6 +1631,8 @@ public class Members {
         }
 
     }
+
+    // This function is used to create a milestone in a project.
     public void createMilestone(){
         //ArrayList<Task> taskArrayList = new ArrayList<>();
 
@@ -1669,7 +1689,7 @@ public class Members {
                 if (choice == 1) {
                     Milestone task;
 
-                    String taskName, taskDescription, taskDeadline = "-";
+                    String taskName, taskDescription, taskDeadline;
 
                     System.out.print("\t\t\tEnter Name of the Milestone : ");
                     while ((taskName = scanner.nextLine()).isEmpty()) {
@@ -1747,7 +1767,7 @@ public class Members {
                         i++;
                         System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, milestoneTask.getTaskName(), milestoneTask.getPriority(), milestoneTask.getDeadline(), milestoneTask.getStatus(), milestoneTask.getDescription());
                     }
-                    int mem = 0;
+                    int mem;
                     while (true) {
 
                         System.out.print("\t\t\tS.no : ");
@@ -1775,6 +1795,8 @@ public class Members {
         }
 
     }
+
+    // This function is used to view a milestone in a project
     public void viewMilestone(){
         System.out.println();
         DesignModel.printLine();
@@ -1852,6 +1874,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used to update details of a milestone
     private void updateMilestoneDetails(Project selectedProject){
         int choice;
 
@@ -2035,6 +2059,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used to view the activity stream of a milestone.
     private void viewMilestoneActivityStream(Project selectedProject){
         int choice;
 
@@ -2070,8 +2096,9 @@ public class Members {
         System.out.println();
         DesignModel.printLine();
     }
+
+    // This function is used to view the comments of a milestone.
     private void viewMilestoneComments(Project selectedProject){
-        //todo
         int choice;
 
         while(true){
@@ -2131,6 +2158,7 @@ public class Members {
 
     }
 
+    // This function is used to view the assigned tasks for a member.
     public void viewAssignedTask(){
         System.out.println();
         DesignModel.printLine();
@@ -2143,44 +2171,42 @@ public class Members {
             DesignModel.printLine();
         }
         else {
-            int choice;
-            if(this.getAssignedTaskArrayList().size() == 1){
-                choice = 1;
+
+            int i = 0;
+            System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
+            for (Task task : this.getAssignedTaskArrayList()) {
+                i++;
+                System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
             }
-            else{
-                int i = 0;
-                System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
-                for (Task task : this.getAssignedTaskArrayList()) {
-                    i++;
-                    System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
-                }
 
-                DesignModel.printLine();
+            DesignModel.printLine();
 
-                System.out.println("\n\t\tEnter 1 to update Task Details,\n\t\tEnter 2 to view Activity Stream,\n\t\tEnter 3 to Comments,\n\t\tEnter -1 to go back");
-                int ver;
-                while (true) {
-                    System.out.print("\t\tEnter your choice : ");
-                    ver = Validation.numberCheck(scanner);
-                    if (ver == -2 || ver == 1 || ver == 2 || ver == 3) {
-                        break;
-                    } else {
-                        System.out.println("\t\tWrong input");
-                    }
-                }
-
-                if (ver == 1) {
-                    updateAssignedTaskDetails();
-                }
-
-                else if(ver == 2){
-                    this.viewAssignedActivityStream();
-                } else if (ver == 3) {
-                    this.viewAssignedComments();
+            System.out.println("\n\t\tEnter 1 to update Task Details,\n\t\tEnter 2 to view Activity Stream,\n\t\tEnter 3 to Comments,\n\t\tEnter -1 to go back");
+            int ver;
+            while (true) {
+                System.out.print("\t\tEnter your choice : ");
+                ver = Validation.numberCheck(scanner);
+                if (ver == -2 || ver == 1 || ver == 2 || ver == 3) {
+                    break;
+                } else {
+                    System.out.println("\t\tWrong input");
                 }
             }
+
+            if (ver == 1) {
+                updateAssignedTaskDetails();
+            }
+
+            else if(ver == 2){
+                this.viewAssignedActivityStream();
+            } else if (ver == 3) {
+                this.viewAssignedComments();
+            }
+
         }
     }
+
+    // This function is used to update the status of the assigned tasks of members
     private void updateAssignedTaskDetails() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
@@ -2327,6 +2353,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used to view activity stream of the assigned Tasks of a user
     private void viewAssignedActivityStream(){
         int choice;
 
@@ -2362,6 +2390,8 @@ public class Members {
         System.out.println();
         DesignModel.printLine();
     }
+
+    // This function is used to view assigned comments of the tasks of a member
     private void viewAssignedComments(){
         int choice;
 
@@ -2421,6 +2451,8 @@ public class Members {
         }
 
     }
+
+    // this function is used to delete a task
     public void deleteTask(){
         System.out.println();
         DesignModel.printLine();
@@ -2502,6 +2534,8 @@ public class Members {
             DesignModel.printLine();
         }
     }
+
+    // This function is used to create subtasks
     public void createSubTasks(){
         //ArrayList<Task> taskArrayList = new ArrayList<>();
 
@@ -2723,8 +2757,8 @@ public class Members {
                             }
                         }
 
+                        HashMap<String, Integer> hashMap = new HashMap<>();
                         if (recurranceChoice != 1) {
-                            HashMap<String, Integer> hashMap = new HashMap<>();
                             System.out.print("\t\t\tEnter recurrance Count. Enter 0 for Infinite Recurrance :");
                             int count = -1;
                             while (count == -1) {
@@ -2733,12 +2767,10 @@ public class Members {
                             }
 
                             hashMap.put(DataModel.getRecurringTaskType().get(recurranceChoice - 1), count);
-                            task.setRecurrance(hashMap);
                         } else {
-                            HashMap<String, Integer> hashMap = new HashMap<>();
-                            hashMap.put(DataModel.getRecurringTaskType().get(recurranceChoice - 1), -1);
-                            task.setRecurrance(hashMap);
+                            hashMap.put(DataModel.getRecurringTaskType().get(0), -1);
                         }
+                        task.setRecurrance(hashMap);
 
                         System.out.println("\t\tSubTasks Added to the Task");
                         System.out.println();
@@ -2756,6 +2788,8 @@ public class Members {
         }
 
     }
+
+    // This function is used to view the subtasks
     public void viewSubTask(){
         System.out.println();
         DesignModel.printLine();
@@ -2859,6 +2893,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used to update the status of the subtask
     private void updateSubTaskDetails(Task selectedTask){
         int choice;
 
@@ -3013,9 +3049,6 @@ public class Members {
 
                             selectedSubTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
                             //selectedProject.getProgressArrayList().add(selectedTask);
-                        /*if(DataModel.getTaskStatus().get(priorityChoice-1).equalsIgnoreCase("Submitted for test")){
-                            selectedProject.getTester().getAssignedTasks().add(selectedTask);
-                        }*/
                         }
                         else{
                             System.out.print("\t\tEnter the custom Status : ");
@@ -3097,6 +3130,8 @@ public class Members {
         }
 
     }
+
+    //This function is used to delete the subtask
     public void deleteSubTask(){
         System.out.println();
         DesignModel.printLine();
@@ -3203,6 +3238,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used to view the chat group
     public int readDiscussionBox(){
         System.out.println();
         DesignModel.printLine();
@@ -3245,6 +3282,8 @@ public class Members {
         }
         return choice-1;
     }
+
+    // This function is used to add a chat
     public void writeDiscussionBox(){
 
         int chatboxResult = readDiscussionBox();
@@ -3284,6 +3323,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used to view the files uploaded for the project
     public int viewFiles(){
         System.out.println();
         DesignModel.printLine();
@@ -3326,6 +3367,8 @@ public class Members {
         }
         return choice-1;
     }
+
+    // This function is used to upload files to a project
     public void inputFiles(){
 
         int chatboxResult = viewFiles();
@@ -3378,7 +3421,7 @@ public class Members {
                             System.out.printf("\t\t%s. %s\n", i, string);
                         }
 
-                        int file = 0;
+                        int file;
 
                         while(true){
                             System.out.print("\n\t\tEnter the s.no of the file you want to download : ");
@@ -3399,6 +3442,8 @@ public class Members {
             }
         }
     }
+
+    // This function is used for the permission settings
     public void permissionSettings(){
         while(true){
 
@@ -3420,7 +3465,6 @@ public class Members {
 
             if(choice > DataModel.getTypeOfUser().keySet().size() || choice < -2){
                 System.out.println("\t\tEnter correct number!");
-                choice = -1;
             } else if(choice == -2){
                 break;
             } else if(choice == 0){
@@ -3449,7 +3493,7 @@ public class Members {
                                 System.out.print("\t\tEnter your choice : ");
                                 c = Validation.numberCheck(scanner);
                             } while (c == -1);
-                            if(c > DataModel.getTypeOfUser().get(typeofUser).size() || c < -2){
+                            if(c > DataModel.getTypeOfUser().get(typeofUser).size() || c < -2 || c == 0){
                                 System.out.println("\t\tEnter correct number!");
                                 c = -1;
                             }
@@ -3505,6 +3549,8 @@ public class Members {
 
         }
     }
+
+    // this function is used to show the list of created projects
     public void showListOfProjects(){
         System.out.println("\n\t\t\tCurrently working Projects : \n");
 
@@ -3517,12 +3563,16 @@ public class Members {
 
         }
     }
+
+    // This function is used to show the notifications for the users
     public void showNotifications() {
         System.out.println("\n\t\t\tShow Notifications : \n");
         for(String notify : this.getNotification()){
             System.out.println("\t\t\t"+ notify);
         }
     }
+
+    // This function is used for the manager notifications
     public void showManagerNotification(){
         System.out.println("\n\t\t\tShow Notifications : \n");
         for(Project project : this.getProjectArrayList()){
@@ -3535,6 +3585,8 @@ public class Members {
 
         }
     }
+
+    //This function is used for the project work flow
     public void showWorkflow(){
         System.out.println("\n\t\t\tShow WorkFlow : \n");
         for(String notify : this.getWorkflow()){
@@ -3542,6 +3594,8 @@ public class Members {
             System.out.println("\t\t\t\t\t\u2193");
         }
     }
+
+    //  this function is the home view of the dashboard
     public void viewDashboard(){
         System.out.println("\n\t\tDashboard!\n");
         if(this.getType().equalsIgnoreCase("Manager")){
@@ -3575,6 +3629,8 @@ public class Members {
 
         this.showWorkflow();
     }
+
+    //This function is List view by status for dashboard
     public void listviewByStatus(){
         System.out.println("\n\t\tListView :");
         for(String status : DataModel.getTaskStatus()){
@@ -3589,6 +3645,8 @@ public class Members {
             }
         }
     }
+
+    // This function is for listview by priority for dashboard
     public void listviewByPriority(){
         System.out.println("\n\t\tListView :");
         for(String status : DataModel.getPriority()){
@@ -3603,6 +3661,8 @@ public class Members {
             }
         }
     }
+
+    // This function is for kanban board by status
     public void kanbanViewByStatus(){
         System.out.println("\n\t\tKanban board :");
         for(String status : DataModel.getTaskStatus()){
@@ -3618,6 +3678,8 @@ public class Members {
             System.out.println();
         }
     }
+
+    //  This function is for kanban board by priority
     public void kanbanViewByPriority(){
         System.out.println("\n\t\tKanban board :");
         for(String status : DataModel.getPriority()){
@@ -3633,6 +3695,8 @@ public class Members {
             System.out.println();
         }
     }
+
+    //this function is to decide to display the listview 1 out of 2
     public int decideListview(){
         int decide = 0;
         listviewByStatus();
@@ -3653,6 +3717,8 @@ public class Members {
             return 3;
         }
     }
+
+    // this function is to decide the kanban board ro display one out of two
     public int decideKanbanview(){
         int decide = 0;
         kanbanViewByStatus();
@@ -3674,6 +3740,7 @@ public class Members {
         }
     }
 
+    // This function is to export the tasks of the project
     public void exportTasks() {
         System.out.println();
         DesignModel.printLine();
@@ -3738,6 +3805,7 @@ public class Members {
         }
     }
 
+    // This function is the root which contains every functions and activities that a user can do
     public void workOfMember(){
         System.out.println("\n\t\tWelcome : " + this.getName().toUpperCase());
         if(this.type.equalsIgnoreCase("Manager") && this.projectArrayList.size()==0){
