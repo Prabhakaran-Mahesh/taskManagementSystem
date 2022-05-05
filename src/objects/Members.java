@@ -3439,14 +3439,14 @@ public class Members {
                         i = 0;
                         for (String string : DataModel.getTypeOfUser().get(typeofUser)) {
                             i++;
-                            System.out.println("\n\t\t" + i + ". " + string);
+                            System.out.println("\t\t" + i + ". " + string);
                         }
-                        System.out.println("\n\t\t\tEnter -1 to go back");
+                        System.out.println("\n\t\tEnter -1 to go back");
                         while (true) {
                             ArrayList<Integer> indexes = new ArrayList<>();
                             int c;
                             do {
-                                System.out.print("\n\t\tEnter your choice : ");
+                                System.out.print("\t\tEnter your choice : ");
                                 c = Validation.numberCheck(scanner);
                             } while (c == -1);
                             if(c > DataModel.getTypeOfUser().get(typeofUser).size() || c < -2){
@@ -3762,22 +3762,50 @@ public class Members {
 
             System.out.println("\n\t\t\t Enter 0 to Change Password");
             System.out.println("\t\t\t Enter 1 to Dashboard View -> ListView, KanbanBoard");
-            System.out.println("\t\t\t Enter 2 to Add a User to your Organisation");
-            System.out.println("\t\t\t Enter 3 to View/Update User Type");
-            System.out.println("\t\t\t Enter 4 to Create a new Project");
-            System.out.println("\t\t\t Enter 5 to View/Update Details of Projects");
-            System.out.println("\t\t\t Enter 6 to Add Tasks To Project");
-            System.out.println("\t\t\t Enter 7 to View/Update Details of Task");
-            System.out.println("\t\t\t Enter 8 to Delete Task");
-            System.out.println("\t\t\t Enter 9 to Add Milestone To Project");
-            System.out.println("\t\t\t Enter 10 to View/Update Details of Milestone");
-            System.out.println("\t\t\t Enter 11 to Create Sub Task");
-            System.out.println("\t\t\t Enter 12 to View/Update Details of SubTask");
-            System.out.println("\t\t\t Enter 13 to Delete subTask");
+            if(DataModel.getTypeOfUser().get(this.type).contains("Add Users to Organisation")){
+                System.out.println("\t\t\t Enter 2 to Add a User to your Organisation");
+            }
+            if(this.getType().equalsIgnoreCase("Manager")){
+                System.out.println("\t\t\t Enter 3 to View/Update User Type");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Create Projects")) {
+                System.out.println("\t\t\t Enter 4 to Create a new Project");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Update Projects")) {
+                System.out.println("\t\t\t Enter 5 to View/Update Details of Projects");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
+                System.out.println("\t\t\t Enter 6 to Add Tasks To Project");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")||DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
+                System.out.println("\t\t\t Enter 7 to View/Update Details of Task");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
+                System.out.println("\t\t\t Enter 8 to Delete Task");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Create Milestones")){
+                System.out.println("\t\t\t Enter 9 to Add Milestone To Project");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Update Milestones")){
+                System.out.println("\t\t\t Enter 10 to View/Update Details of Milestone");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
+                System.out.println("\t\t\t Enter 11 to Create Sub Task");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks") || DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
+                System.out.println("\t\t\t Enter 12 to View/Update Details of SubTask");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")) {
+                System.out.println("\t\t\t Enter 13 to Delete subTask");
+            }
             System.out.println("\t\t\t Enter 14 for DiscussionBox");
             System.out.println("\t\t\t Enter 15 to Add Files");
-            System.out.println("\t\t\t Enter 16 to Permission Settings");
-            System.out.println("\t\t\t Enter 17 to export Tasks as CSV file");
+            if(this.getType().equalsIgnoreCase("Manager")){
+                System.out.println("\t\t\t Enter 16 to Permission Settings");
+            }
+            if(DataModel.getTypeOfUser().get(this.type).contains("Export Tasks")){
+                System.out.println("\t\t\t Enter 17 to export Tasks as CSV file");
+            }
             System.out.println("\t\t\t Enter -1 to Logout\n");
 
             int adminChoice = -1;
@@ -3812,7 +3840,7 @@ public class Members {
                         this.addMembersToTheCompany();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to add a User to the Organisation");
+                        System.out.println("\n\t\t\tSorry! Wrong Input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3822,7 +3850,7 @@ public class Members {
                         this.editUserType();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Change user Type");
+                        System.out.println("\n\t\t\tSorry! Wrong input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3842,7 +3870,7 @@ public class Members {
                         this.viewProjects();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Update Projects");
+                        System.out.println("\n\t\t\tSorry! Wrong Input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3852,7 +3880,7 @@ public class Members {
                         this.createTasks();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Create Tasks In a Project");
+                        System.out.println("\n\t\t\tSorry! Wrong Input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3865,7 +3893,7 @@ public class Members {
                         this.viewAssignedTask();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Update Tasks Status In a Project");
+                        System.out.println("\n\t\t\tSorry! Wrong input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3875,7 +3903,7 @@ public class Members {
                         this.deleteTask();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Delete Tasks In a Project");
+                        System.out.println("\n\t\t\tSorry! Wrong input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3885,7 +3913,7 @@ public class Members {
                         this.createMilestone();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Create Tasks In a Project");
+                        System.out.println("\n\t\t\tSorry! Wrong input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3895,7 +3923,7 @@ public class Members {
                         this.viewMilestone();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Update Tasks Status In a Project");
+                        System.out.println("\n\t\t\tSorry! Wrong Input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3905,7 +3933,7 @@ public class Members {
                         this.createSubTasks();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Create Tasks In a Project");
+                        System.out.println("\n\t\t\tSorry! Wrong input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3915,7 +3943,7 @@ public class Members {
                         this.viewSubTask();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Update Tasks Status In a Project");
+                        System.out.println("\n\t\t\tSorry! Wrong input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3925,7 +3953,7 @@ public class Members {
                         this.deleteSubTask();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Delete Tasks In a Project");
+                        System.out.println("\n\t\t\tSorry! Wrong input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3937,7 +3965,7 @@ public class Members {
                         this.permissionSettings();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Permission Settings");
+                        System.out.println("\n\t\t\tWrong input");
                         System.out.println();
                         DesignModel.printLine();
                     }
@@ -3947,7 +3975,7 @@ public class Members {
                         this.exportTasks();
                     }
                     else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Export tasks");
+                        System.out.println("\n\t\t\tSorry! Wrong input");
                         System.out.println();
                         DesignModel.printLine();
                     }
