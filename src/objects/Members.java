@@ -3588,7 +3588,7 @@ public class Members {
         }
     }
 
-    public void createIssue(Task selectedTask){
+    public void createIssue(Task selectedTask) {
 
         System.out.println("\t\tAdd Associated Issue to the Task");
 
@@ -3718,7 +3718,7 @@ public class Members {
                 selectedTask.getAssociatedIssues().add(tasks);
                 tasks.setAssignedMembers(selectedTask.getAssignedMembers());
                 tasks.setFollowers(selectedTask.getFollowers());
-                for(Members members : selectedTask.getAssignedMembers()){
+                for (Members members : selectedTask.getAssignedMembers()) {
                     members.getAssignedIssueArrayList().add(tasks);
                 }
 
@@ -3733,7 +3733,8 @@ public class Members {
             }
         }
     }
-    public void updateIssue(){}
+
+
 
     // this function is used to show the list of created projects
     public void showListOfProjects(){

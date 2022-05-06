@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="Tester Job Completed">
+    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="Add  issue Problen solved">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/objects/Issues.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Issues.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/objects/Members.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Members.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/objects/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Task.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -239,7 +237,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651818041559</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Add  issue Problen solved">
+      <created>1651834018864</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1651834018864</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -278,6 +283,7 @@
     <MESSAGE value="Added comments to the functions" />
     <MESSAGE value="Sending tasks for test when status is set to submitted for test" />
     <MESSAGE value="Tester Job Completed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tester Job Completed" />
+    <MESSAGE value="Add  issue Problen solved" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add  issue Problen solved" />
   </component>
 </project>
