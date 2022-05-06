@@ -9,8 +9,10 @@ import models.DesignModel;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 
 public class Members {
     String name;
@@ -114,6 +116,7 @@ public class Members {
         for(Members members : DataModel.getMembersArrayList()){
             if(!members.getType().equalsIgnoreCase("Manager")){
                 membersArrayList.add(members);
+
             }
         }
 
@@ -1243,7 +1246,8 @@ public class Members {
                 System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
                 for (Task task : selectedProject.getTaskArrayList()) {
                     i++;
-                    System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+                    String s = this.assignedTaskArrayList.contains(task) ? "Assigned" : "Not assigned";
+                    System.out.printf("\t\t%15s %15s %15s %20s %25s %25s %20s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription(), s);
                 }
 
                 DesignModel.printLine();
@@ -1482,7 +1486,6 @@ public class Members {
                             }
                             selectedTask.getTaskOwner().getWorkflow().add("Project: "+selectedProject.getProjectName()+" :-> " + selectedTask.getTaskName() + ":->The Task Status is changed from "+selectedTask.getStatus()+" to "+DataModel.getTaskStatus().get(priorityChoice-1)+" by "+this.getName()+ " on " + formatter.format(date));
                             selectedTask.setStatus(DataModel.getTaskStatus().get(priorityChoice-1));
-
                             if(selectedTask.getStatus().equalsIgnoreCase("Submitted for test")){
                                 for(Members members : selectedProject.getTeamMemberArrayList()){
                                     if(members.getType().equalsIgnoreCase("Tester")){
@@ -2265,9 +2268,9 @@ public class Members {
                         System.out.println("\n\t\tCurrent Status : " + selectedTask.getStatus());
                         System.out.print("\t\tEnter the new New Priority S.no : ");
                         System.out.print("\n\t\t\t S.no : 1. Issue Reported");
-                        System.out.print("\n\t\t\t S.no : 1. Completed");
+                        System.out.print("\n\t\t\t S.no : 2. Completed");
 
-                        System.out.print("\t\tChoose task Status! Enter");
+                        System.out.print("\n\t\t\tChoose task Status! Enter");
                         int priorityChoice = -1;
                         while (true) {
                             while (priorityChoice == -1) {
@@ -2291,6 +2294,8 @@ public class Members {
                             }
                             selectedTask.getTaskOwner().getWorkflow().add("Project: "+projectArrayList.get(0).getProjectName()+" :-> " + selectedTask.getTaskName() + ":-> The Task Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName() + " on " + formatter.format(date));
                             selectedTask.setStatus("Issue Reported");
+
+                            this.createIssue(selectedTask);
                         } else {
                             selectedTask.getActivityStream().add("The Task Status is changed from " + selectedTask.getStatus() + " to Completed by " + this.getName());
                             for(Members members : selectedTask.getAssignedMembers()){
@@ -3575,6 +3580,151 @@ public class Members {
         }
     }
 
+    public void createIssue(Task selectedTask){
+
+        System.out.println("\t\tAdd Associated Issue to the Task");
+
+        boolean done = false;
+        int choice;
+        while (!done) {
+            System.out.println("\t\t\t1. Add Issue");
+            System.out.println("\t\t\t-1. Issue Adding completed");
+            do {
+                System.out.print("\n\t\tEnter your choice : ");
+                choice = Validation.numberCheck(scanner);
+            } while (choice == -1);
+
+            if (choice == 1) {
+                Task task;
+
+                String taskName, taskDescription, taskDeadline;
+
+                System.out.print("\t\t\tEnter Name of the Issue : ");
+                while ((taskName = scanner.nextLine()).isEmpty()) {
+                    System.out.print("Enter a Valid Issue name : ");
+                }
+
+                System.out.print("\t\t\tIssue Description : ");
+                //scanner.nextLine();
+                taskDescription = scanner.nextLine();
+                System.out.print("");
+                if (taskDescription.isEmpty()) {
+                    taskDescription = "No Description";
+                }
+                System.out.print("");
+
+
+                while (true) {
+                    System.out.println("\n\t\t\tEnter 1 to give a Deadline. \n\t\t\tEnter 2 to give Duration. \n\t\t\tEnter 3 to skip");
+                    int dead = -1;
+                    while (dead == -1) {
+                        System.out.print("\t\t S.no: ");
+                        dead = Validation.numberCheck(scanner);
+                    }
+
+                    if (dead == 1) {
+                        int flag = 0;
+                        do {
+                            System.out.println("\t\t\tEnter -1 to go back");
+                            System.out.print("\t\t\tIssue Deadline (Date format : dd-MM-yyyy) : ");
+                            taskDeadline = scanner.next();
+                            if (taskDeadline.equalsIgnoreCase("-1")) {
+                                flag = 1;
+                                break;
+                            }
+
+                        } while (!Validation.dateValidation(taskDeadline));
+                        if (flag == 0) {
+                            break;
+                        }
+                    } else if (dead == 2) {
+                        int flag = -1;
+                        System.out.println("\t\t\tIssue Duration : ");
+                        System.out.println("\n\t\t\tEnter -1 to go back");
+                        System.out.println("\t\t\tEnter 1 to Set years");
+                        System.out.println("\t\t\tEnter 2 to Set months");
+                        System.out.println("\t\t\tEnter 3 to Set weeks");
+                        System.out.println("\t\t\tEnter 4 to Set days");
+                        System.out.print("\t\t\tEnter your choice : ");
+
+                        while (flag == -1) {
+                            System.out.print("\t\t S.no: ");
+                            flag = Validation.numberCheck(scanner);
+                        }
+
+                        if (flag == -2) {
+                            continue;
+                        } else if (flag == 1) {
+                            System.out.println("\n\t\t\tEnter number of Years");
+                            taskDeadline = Validation.numberCheck(scanner) + " Years";
+                            break;
+                        } else if (flag == 2) {
+                            System.out.println("\n\t\t\tEnter number of Months");
+                            taskDeadline = Validation.numberCheck(scanner) + " Months";
+                        } else if (flag == 3) {
+                            System.out.println("\n\t\t\tEnter number of Weeks");
+                            taskDeadline = Validation.numberCheck(scanner) + " Weeks";
+                        } else if (flag == 4) {
+                            System.out.println("\n\t\t\tEnter number of Days");
+                            taskDeadline = Validation.numberCheck(scanner) + " Days";
+                        } else {
+                            System.out.println("\t\t\tWrong input!");
+                            continue;
+                        }
+                        break;
+                    } else if (dead == 3) {
+                        taskDeadline = "   -   ";
+                        break;
+                    } else {
+                        System.out.println("\t\t\tWrong input!");
+                    }
+                }
+
+
+                System.out.println("\t\tPriority List : ");
+
+                int i = 0;
+                for (String m : DataModel.getIssueSeverity()) {
+                    i++;
+                    System.out.print("\n\t\t\t S.no : " + i + ". " + m);
+                }
+                System.out.println();
+                DesignModel.printLine();
+
+                System.out.print("\t\tChoose task Priority! Enter");
+                int priorityChoice = -1;
+                while (true) {
+                    while (priorityChoice == -1) {
+                        System.out.print("\t\t S.no: ");
+                        priorityChoice = Validation.numberCheck(scanner);
+                    }
+
+                    if (priorityChoice < 1 || priorityChoice > DataModel.getIssueSeverity().size()) {
+                        System.out.println("\n\t\t S.no not found!");
+                        priorityChoice = -1;
+                    } else {
+                        break;
+                    }
+                }
+                task = new Task(taskName, selectedTask.getTaskOwner(), taskDescription, taskDeadline, DataModel.getIssueSeverity().get(priorityChoice - 1));
+                selectedTask.getSubTask().add(task);
+                task.setAssignedMembers(selectedTask.getAssignedMembers());
+                task.setFollowers(selectedTask.getFollowers());
+
+                System.out.println();
+                DesignModel.printLine();
+            } else if (choice == -2) {
+                done = true;
+                System.out.println();
+                DesignModel.printLine();
+            } else {
+                System.out.println("\t\tWrong number. check your Input!\n");
+            }
+
+        }
+
+    }
+
     // this function is used to show the list of created projects
     public void showListOfProjects(){
         System.out.println("\n\t\t\tCurrently working Projects : \n");
@@ -3653,6 +3803,26 @@ public class Members {
 
 
         this.showWorkflow();
+    }
+
+    public int dashboardDecider(){
+        int dash = 0;
+        System.out.println("\n\t\tEnter 0 to HomePage. \n\t\tEnter 1 to ListView. \n\t\tEnter 2 to Kanban Board. \n\t\tEnter -1 to go back");
+        while (true) {
+            System.out.print("\t\tEnter your choice : ");
+            dash = Validation.numberCheck(scanner);
+            if (dash == -2 || dash == 1 || dash == 2 || dash == 0) {
+                break;
+            } else {
+                System.out.println("\t\tWrong input");
+            }
+        }
+        if(dash == 1){
+            dash = this.decideListview();
+        } else if(dash == 2){
+            dash = this.decideKanbanView();
+        }
+        return dash;
     }
 
     //This function is List view by status for dashboard
@@ -3744,7 +3914,7 @@ public class Members {
     }
 
     // this function is to decide the kanban board ro display one out of two
-    public int decideKanbanview(){
+    public int decideKanbanView(){
         int decide = 0;
         kanbanViewByStatus();
         System.out.println("\n\t\tEnter 1. to Show by status. \n\t\tEnter 2. to Show by Priority. \n\t\tEnter -1. to go back");
@@ -3832,6 +4002,17 @@ public class Members {
 
     // This function is the root which contains every functions and activities that a user can do
     public void workOfMember(){
+        if(this.getType().equalsIgnoreCase("Tester")){
+            ArrayList<Task> temp = new ArrayList<>();
+            for(Task task : this.getAssignedTaskArrayList()){
+                if(task.getStatus().equalsIgnoreCase("Submitted for test") && !temp.contains(task)){
+                    temp.add(task);
+                }
+            }
+            this.getAssignedTaskArrayList().clear();
+            this.getAssignedTaskArrayList().addAll(temp);
+        }
+
         System.out.println("\n\t\tWelcome : " + this.getName().toUpperCase());
         if(this.type.equalsIgnoreCase("Manager") && this.projectArrayList.size()==0){
             this.sampleProject();
@@ -3851,55 +4032,111 @@ public class Members {
                 this.kanbanViewByPriority();
             }
 
+            int flag = 0;
+            HashMap<Integer, String> listOfMethods = new HashMap<>();
             System.out.println("\n\t\tWhat would you like to do :");
 
-            System.out.println("\n\t\t\t Enter 0 to Change Password");
-            System.out.println("\t\t\t Enter 1 to Dashboard View -> ListView, KanbanBoard");
+            System.out.println("\n\t\t\t Enter "+ flag + " to Change Password");
+            listOfMethods.put(flag, "Change Password");
+            flag++;
+
+            System.out.println("\t\t\t Enter "+ flag + " to Dashboard View -> ListView, KanbanBoard");
+            listOfMethods.put(flag, "Dashboard View");
+            flag++;
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Add Users to Organisation")){
-                System.out.println("\t\t\t Enter 2 to Add a User to your Organisation");
+                System.out.println("\t\t\t Enter "+ flag + " to Add a User to your Organisation");
+                listOfMethods.put(flag, "Add User to org");
+                flag++;
             }
+
             if(this.getType().equalsIgnoreCase("Manager")){
-                System.out.println("\t\t\t Enter 3 to View/Update User Type");
+                System.out.println("\t\t\t Enter " + flag + " to View/Update User Type");
+                listOfMethods.put(flag, "Update User");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Create Projects")) {
-                System.out.println("\t\t\t Enter 4 to Create a new Project");
+                System.out.println("\t\t\t Enter "+ flag + " to Create a new Project");
+                listOfMethods.put(flag, "Create Project");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Update Projects")) {
-                System.out.println("\t\t\t Enter 5 to View/Update Details of Projects");
+                System.out.println("\t\t\t Enter "+ flag + " to View/Update Details of Projects");
+                listOfMethods.put(flag, "View Projects");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
-                System.out.println("\t\t\t Enter 6 to Add Tasks To Project");
+                System.out.println("\t\t\t Enter "+ flag + " to Add Tasks To Project");
+                listOfMethods.put(flag,"Create Tasks");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")||DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
-                System.out.println("\t\t\t Enter 7 to View/Update Details of Task");
+                System.out.println("\t\t\t Enter "+ flag + " to View/Update Details of Task");
+                listOfMethods.put(flag, "View Tasks");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
-                System.out.println("\t\t\t Enter 8 to Delete Task");
+                System.out.println("\t\t\t Enter "+ flag + " to Delete Task");
+                listOfMethods.put(flag, "Delete Tasks");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Create Milestones")){
-                System.out.println("\t\t\t Enter 9 to Add Milestone To Project");
+                System.out.println("\t\t\t Enter " + flag + " to Add Milestone To Project");
+                listOfMethods.put(flag, "Create Milestones");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Update Milestones")){
-                System.out.println("\t\t\t Enter 10 to View/Update Details of Milestone");
+                System.out.println("\t\t\t Enter " + flag + " to View/Update Details of Milestone");
+                listOfMethods.put(flag, "Update Milestones");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
-                System.out.println("\t\t\t Enter 11 to Create Sub Task");
+                System.out.println("\t\t\t Enter " + flag + " to Create Sub Task");
+                listOfMethods.put(flag, "Create SubTask");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks") || DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
-                System.out.println("\t\t\t Enter 12 to View/Update Details of SubTask");
+                System.out.println("\t\t\t Enter "+flag+" to View/Update Details of SubTask");
+                listOfMethods.put(flag, "View SubTask");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")) {
-                System.out.println("\t\t\t Enter 13 to Delete subTask");
+                System.out.println("\t\t\t Enter "+flag+" to Delete subTask");
+                listOfMethods.put(flag, "Delete SubTask");
+                flag++;
             }
-            System.out.println("\t\t\t Enter 14 for DiscussionBox");
-            System.out.println("\t\t\t Enter 15 to Add Files");
+
+            System.out.println("\t\t\t Enter "+flag+" for DiscussionBox");
+            listOfMethods.put(flag, "DiscussionBox");
+            flag++;
+
+            System.out.println("\t\t\t Enter "+flag+" to Add Files");
+            listOfMethods.put(flag, "Add files");
+            flag++;
+
             if(this.getType().equalsIgnoreCase("Manager")){
-                System.out.println("\t\t\t Enter 16 to Permission Settings");
+                System.out.println("\t\t\t Enter "+flag+" to Permission Settings");
+                listOfMethods.put(flag, "Permission Settings");
+                flag++;
             }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Export Tasks")){
-                System.out.println("\t\t\t Enter 17 to export Tasks as CSV file");
+                System.out.println("\t\t\t Enter "+flag+" to export Tasks as CSV file");
+                listOfMethods.put(flag, "Export Task");
             }
+
             System.out.println("\t\t\t Enter -1 to Logout\n");
+            listOfMethods.put(-2, "Logout");
 
             int adminChoice = -1;
             while (adminChoice == -1) {
@@ -3907,174 +4144,163 @@ public class Members {
                 adminChoice = Validation.numberCheck(scanner);
             }
 
+            if(adminChoice >= listOfMethods.size() || adminChoice < -2){
+                System.out.println("\n\t\t\tSorry! Wrong Input");
+            }
+            else{
 
-            switch (adminChoice) {
-                case -2 -> this.exitVerification();
-                case 0 -> this.changePassword();
-                case 1 -> {
-                 System.out.println("\n\t\tEnter 0 to HomePage. \n\t\tEnter 1 to ListView. \n\t\tEnter 2 to Kanban Board. \n\t\tEnter -1 to go back");
-                    while (true) {
-                        System.out.print("\t\tEnter your choice : ");
-                        dash = Validation.numberCheck(scanner);
-                        if (dash == -2 || dash == 1 || dash == 2 || dash == 0) {
-                            break;
-                        } else {
-                            System.out.println("\t\tWrong input");
+                switch (listOfMethods.get(adminChoice)) {
+                    case "Logout" -> this.exitVerification();
+                    case "Change Password" -> this.changePassword();
+                    case "Dashboard View" -> dash = this.dashboardDecider();
+                    case "Add User to org" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Add Users to Organisation")){
+                            this.addMembersToTheCompany();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong Input");
+                            System.out.println();
+                            DesignModel.printLine();
                         }
                     }
-                    if(dash == 1){
-                        dash = this.decideListview();
-                    } else if(dash == 2){
-                        dash = this.decideKanbanview();
+                    case "Update User" -> {
+                        if(this.getType().equalsIgnoreCase("Manager")){
+                            this.editUserType();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                }
-                case 2 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Add Users to Organisation")){
-                        this.addMembersToTheCompany();
+                    case "Create Project" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Create Projects")){
+                            this.createProjects();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! You don't have the access to Create Projects");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong Input");
-                        System.out.println();
-                        DesignModel.printLine();
+                    case "View Projects" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Update Projects")){
+                            this.viewProjects();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong Input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                }
-                case 3 -> {
-                    if(this.getType().equalsIgnoreCase("Manager")){
-                        this.editUserType();
+                    case "Create Tasks" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
+                            this.createTasks();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong Input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong input");
-                        System.out.println();
-                        DesignModel.printLine();
+                    case "View Tasks" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")){
+                            this.viewTask();
+                        }
+                        else if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
+                            this.viewAssignedTask();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                }
-                case 4 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Create Projects")){
-                        this.createProjects();
+                    case "Delete Tasks" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
+                            this.deleteTask();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                    else{
-                        System.out.println("\n\t\t\tSorry! You don't have the access to Create Projects");
-                        System.out.println();
-                        DesignModel.printLine();
+                    case "Create Milestones" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Create Milestones")){
+                            this.createMilestone();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                }
-                case 5 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Update Projects")){
-                        this.viewProjects();
+                    case "Update Milestones" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Update Milestones")){
+                            this.viewMilestone();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong Input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong Input");
-                        System.out.println();
-                        DesignModel.printLine();
+                    case "Create SubTask" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
+                            this.createSubTasks();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                }
-                case 6 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
-                        this.createTasks();
+                    case "View SubTask" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks") || DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
+                            this.viewSubTask();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong Input");
-                        System.out.println();
-                        DesignModel.printLine();
+                    case "Delete SubTask" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
+                            this.deleteSubTask();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                }
-                case 7 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks")){
-                        this.viewTask();
+                    case "DiscussionBox" -> this.writeDiscussionBox();
+                    case "Add files" -> this.inputFiles();
+                    case "Permission Settings" -> {
+                        if(this.getType().equalsIgnoreCase("Manager")){
+                            this.permissionSettings();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tWrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                    else if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
-                        this.viewAssignedTask();
+                    case "Export Task" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Export Tasks")){
+                            this.exportTasks();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
                     }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong input");
-                        System.out.println();
-                        DesignModel.printLine();
-                    }
-                }
-                case 8 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
-                        this.deleteTask();
-                    }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong input");
-                        System.out.println();
-                        DesignModel.printLine();
-                    }
-                }
-                case 9 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Create Milestones")){
-                        this.createMilestone();
-                    }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong input");
-                        System.out.println();
-                        DesignModel.printLine();
-                    }
-                }
-                case 10 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Update Milestones")){
-                        this.viewMilestone();
-                    }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong Input");
-                        System.out.println();
-                        DesignModel.printLine();
-                    }
-                }
-                case 11 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Create Tasks")){
-                        this.createSubTasks();
-                    }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong input");
-                        System.out.println();
-                        DesignModel.printLine();
-                    }
-                }
-                case 12 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks") || DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
-                        this.viewSubTask();
-                    }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong input");
-                        System.out.println();
-                        DesignModel.printLine();
-                    }
-                }
-                case 13 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
-                        this.deleteSubTask();
-                    }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong input");
-                        System.out.println();
-                        DesignModel.printLine();
-                    }
-                }
-                case 14 -> this.writeDiscussionBox();
-                case 15 -> this.inputFiles();
-                case 16 -> {
-                    if(this.getType().equalsIgnoreCase("Manager")){
-                        this.permissionSettings();
-                    }
-                    else{
-                        System.out.println("\n\t\t\tWrong input");
-                        System.out.println();
-                        DesignModel.printLine();
-                    }
-                }
-                case 17 -> {
-                    if(DataModel.getTypeOfUser().get(this.type).contains("Export Tasks")){
-                        this.exportTasks();
-                    }
-                    else{
-                        System.out.println("\n\t\t\tSorry! Wrong input");
-                        System.out.println();
-                        DesignModel.printLine();
-                    }
-                }
-                default -> System.out.println("\n\tWrong value. Give correct input number!\n");
+                    default -> System.out.println("\n\tWrong value. Give correct input number!\n");
 
+                }
             }
         }
     }
