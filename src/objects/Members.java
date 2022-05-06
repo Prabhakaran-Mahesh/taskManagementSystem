@@ -22,7 +22,7 @@ public class Members {
     String type;
 
     ArrayList<Task> assignedTaskArrayList = new ArrayList<>();
-    //ArrayList<Issue> assignedIssueArrayList = new ArrayList<>();
+    ArrayList<Issues> assignedIssueArrayList = new ArrayList<>();
 
     ArrayList<Project> projectArrayList = new ArrayList<>();
     ArrayList<String> notification = new ArrayList<>();
@@ -106,6 +106,14 @@ public class Members {
 
     public void setWorkflow(ArrayList<String> workflow) {
         this.workflow = workflow;
+    }
+
+    public ArrayList<Issues> getAssignedIssueArrayList() {
+        return assignedIssueArrayList;
+    }
+
+    public void setAssignedIssueArrayList(ArrayList<Issues> assignedIssueArrayList) {
+        this.assignedIssueArrayList = assignedIssueArrayList;
     }
 
     // This function is used to create a sample project with 5 tasks. so that i dont want to create project each time i run.
@@ -3595,7 +3603,7 @@ public class Members {
             } while (choice == -1);
 
             if (choice == 1) {
-                Task task;
+                Issues tasks;
 
                 String taskName, taskDescription, taskDeadline;
 
@@ -3691,7 +3699,7 @@ public class Members {
                 System.out.println();
                 DesignModel.printLine();
 
-                System.out.print("\t\tChoose task Priority! Enter");
+                System.out.print("\t\tChoose Issue Priority! Enter");
                 int priorityChoice = -1;
                 while (true) {
                     while (priorityChoice == -1) {
@@ -3706,10 +3714,13 @@ public class Members {
                         break;
                     }
                 }
-                task = new Task(taskName, selectedTask.getTaskOwner(), taskDescription, taskDeadline, DataModel.getIssueSeverity().get(priorityChoice - 1));
-                selectedTask.getSubTask().add(task);
-                task.setAssignedMembers(selectedTask.getAssignedMembers());
-                task.setFollowers(selectedTask.getFollowers());
+                tasks = new Issues(taskName, selectedTask.getTaskOwner(), taskDescription, taskDeadline, DataModel.getIssueSeverity().get(priorityChoice - 1));
+                selectedTask.getAssociatedIssues().add(tasks);
+                tasks.setAssignedMembers(selectedTask.getAssignedMembers());
+                tasks.setFollowers(selectedTask.getFollowers());
+                for(Members members : selectedTask.getAssignedMembers()){
+                    members.getAssignedIssueArrayList().add(tasks);
+                }
 
                 System.out.println();
                 DesignModel.printLine();
@@ -3720,10 +3731,9 @@ public class Members {
             } else {
                 System.out.println("\t\tWrong number. check your Input!\n");
             }
-
         }
-
     }
+    public void updateIssue(){}
 
     // this function is used to show the list of created projects
     public void showListOfProjects(){

@@ -18,7 +18,7 @@ public class Task {
     HashMap<String, Integer> recurrance = new HashMap<>();
     ArrayList<String> comments = new ArrayList<>();
     ArrayList<String> starredComments = new ArrayList<>();
-    //ArrayList<Issue> associatedIssues = new ArrayList<>();
+    ArrayList<Issues> associatedIssues = new ArrayList<>();
     ArrayList<String> documents = new ArrayList<>();
     String remainder = "No remainder";
     ArrayList<String> activityStream = new ArrayList<>();
@@ -166,13 +166,13 @@ public class Task {
         this.starredComments = starredComments;
     }
 
-    /*public ArrayList<Issue> getAssociatedIssues() {
+    public ArrayList<Issues> getAssociatedIssues() {
         return associatedIssues;
     }
 
-    public void setAssociatedIssues(ArrayList<Issue> associatedIssues) {
+    public void setAssociatedIssues(ArrayList<Issues> associatedIssues) {
         this.associatedIssues = associatedIssues;
-    }*/
+    }
 
     public ArrayList<String> getDocuments() {
         return documents;
