@@ -3734,6 +3734,247 @@ public class Members {
         }
     }
 
+    public void viewAssignedIssue(){
+        System.out.println();
+        DesignModel.printLine();
+
+        System.out.println("\t\tView the Project tasks");
+        System.out.println();
+
+        if(this.getAssignedTaskArrayList().size() == 0){
+            System.out.print("\t\tNo Tasks are assigned to you yet!\n");
+            DesignModel.printLine();
+        }
+        else {
+
+            int i = 0;
+            System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "TaskName", "Priority", "Deadline", "Status", "Description");
+            for (Task task : this.getAssignedTaskArrayList()) {
+                i++;
+                System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+            }
+
+            DesignModel.printLine();
+            this.updateAssignedIssueDetails();
+
+        }
+    }
+
+    // This function is used to update the status of the assigned tasks of members
+    private void updateAssignedIssueDetails() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+
+        int choice;
+
+        while (true) {
+            if (this.getAssignedTaskArrayList().size() == 1) {
+                choice = 1;
+                break;
+            } else {
+                System.out.print("\n\t\tEnter the s.no of the Task which you want to update : ");
+                choice = Validation.numberCheck(scanner);
+                if (choice > 0 && choice <= this.getAssignedTaskArrayList().size()) {
+                    break;
+                } else {
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+        }
+
+        Task selectedTask = this.getAssignedTaskArrayList().get(choice - 1);
+
+        System.out.println("\t\tView the Associated Issues");
+        System.out.println();
+
+        if (selectedTask.getAssociatedIssues().size() == 0) {
+            System.out.print("\t\tNo Issues are assigned to you yet!\n");
+            DesignModel.printLine();
+        } else {
+
+            int i = 0;
+            System.out.printf("\n\t\t%15s %15s %15s %20s %25s %25s\n", "S.no", "IssueName", "Priority", "Deadline", "Status", "Description");
+            for (Issues task : selectedTask.getAssociatedIssues()) {
+                i++;
+                System.out.printf("\t\t%15s %15s %15s %20s %25s %25s\n", i, task.getTaskName(), task.getPriority(), task.getDeadline(), task.getStatus(), task.getDescription());
+            }
+
+            DesignModel.printLine();
+
+            System.out.println("\n\t\tEnter 1 to update Issue Details,\n\t\tEnter 2 to view Activity Stream,\n\t\tEnter 3 to Comments,\n\t\tEnter -1 to go back");
+            int ver;
+            while (true) {
+                System.out.print("\t\tEnter your choice : ");
+                ver = Validation.numberCheck(scanner);
+                if (ver == -2 || ver == 1 || ver == 2 || ver == 3) {
+                    break;
+                } else {
+                    System.out.println("\t\tWrong input");
+                }
+            }
+
+            if (ver == 1) {
+
+                while (true) {
+                    if (selectedTask.getAssociatedIssues().size() == 1) {
+                        choice = 1;
+                        break;
+                    } else {
+                        System.out.print("\n\t\tEnter the s.no of the Issue which you want to update : ");
+                        choice = Validation.numberCheck(scanner);
+                        if (choice > 0 && choice <= selectedTask.getAssociatedIssues().size()) {
+                            break;
+                        } else {
+                            System.out.println("\t\tWrong input");
+                        }
+                    }
+
+                }
+
+                Task selectedIssue = selectedTask.getAssociatedIssues().get(choice - 1);
+
+                boolean update = true;
+                while(update) {
+                    System.out.println("\n\t\t\tEnter the s.no of credential you want to change!");
+                    System.out.println("\t\t\t Enter 1 to Issue Status ");
+                    System.out.println("\t\t\t Enter 2 to Issue Remainder");
+                    System.out.println("\t\t\t Enter -1 to Go back\n");
+
+                    int updateChoice = -1;
+                    while (updateChoice == -1) {
+                        System.out.print("\t\t\t Enter your Choice : ");
+                        updateChoice = Validation.numberCheck(scanner);
+                    }
+
+                    switch (updateChoice) {
+                        case -2 -> {
+                            update = false;
+
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
+                        case 1 -> {
+                            if (getType().equalsIgnoreCase("Tester")) {
+                                System.out.println("\n\t\tCurrent Status : " + selectedIssue.getStatus());
+                                System.out.print("\t\tEnter the new New Priority S.no : ");
+                                System.out.print("\n\t\t\t S.no : 1. Issue Reported");
+                                System.out.print("\n\t\t\t S.no : 2. Completed");
+
+                                System.out.print("\n\t\t\tChoose task Status! Enter");
+                                int priorityChoice = -1;
+                                while (true) {
+                                    while (priorityChoice == -1) {
+                                        System.out.print("\t\t S.no: ");
+                                        priorityChoice = Validation.numberCheck(scanner);
+                                    }
+
+                                    if (priorityChoice < 1 || priorityChoice > 2) {
+                                        System.out.println("\n\t\t S.no not found!");
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (priorityChoice == 1) {
+                                    selectedIssue.getActivityStream().add("The Issue Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName());
+                                    for (Members members : selectedTask.getAssignedMembers()) {
+                                        if (!members.getName().equalsIgnoreCase(this.getName())) {
+                                            members.getWorkflow().add("Project: " + projectArrayList.get(0).getProjectName() + " :-> " + selectedIssue.getTaskName() + ":-> The Issue Status is changed from " + selectedIssue.getStatus() + " to Issue Reported by " + this.getName() + " on " + formatter.format(date));
+                                            members.getNotification().add("The Issue Status is changed from " + selectedTask.getStatus() + " to Issue Reported by " + this.getName());
+                                        }
+                                    }
+                                    selectedTask.getTaskOwner().getWorkflow().add("Project: " + projectArrayList.get(0).getProjectName() + " :-> " + selectedIssue.getTaskName() + ":-> The Issue Status is changed from " + selectedIssue.getStatus() + " to Issue Reported by " + this.getName() + " on " + formatter.format(date));
+                                    selectedIssue.setStatus("Issue Reported");
+
+                                } else {
+                                    selectedTask.getActivityStream().add("The issue Status is changed from " + selectedIssue.getStatus() + " to Completed by " + this.getName());
+                                    for (Members members : selectedTask.getAssignedMembers()) {
+                                        if (!members.getName().equalsIgnoreCase(this.getName())) {
+                                            members.getWorkflow().add("Project: " + projectArrayList.get(0).getProjectName() + " :-> " + selectedIssue.getTaskName() + ":-> The Issue Status is changed from " + selectedIssue.getStatus() + " to Completed by " + this.getName() + " on " + formatter.format(date));
+                                            members.getNotification().add("The Task Status is changed from " + selectedTask.getStatus() + " to Completed by " + this.getName());
+                                        }
+                                    }
+                                    selectedTask.getTaskOwner().getWorkflow().add("Project: " + projectArrayList.get(0).getProjectName() + " :-> " + selectedIssue.getTaskName() + ":-> The Issue Status is changed from " + selectedIssue.getStatus() + " to Completed by " + this.getName() + " on " + formatter.format(date));
+                                    selectedIssue.setStatus("Completed");
+                                }
+                            } else if (getType().equalsIgnoreCase("Member")) {
+                                System.out.println("\n\t\tCurrent Status : " + selectedIssue.getStatus());
+                                System.out.print("\t\tEnter the new New Priority S.no : ");
+
+                                i = 0;
+                                for (String m : DataModel.getIssueStatus()) {
+                                    if (!m.equalsIgnoreCase("Completed") || !m.equalsIgnoreCase("Issue Reported")) {
+                                        i++;
+                                        System.out.print("\n\t\t\t S.no : " + i + ". " + m);
+                                    }
+                                }
+                                System.out.println();
+                                DesignModel.printLine();
+
+                                System.out.print("\t\tChoose Issue Status! Enter");
+                                int priorityChoice = -1;
+                                while (true) {
+                                    while (priorityChoice == -1) {
+                                        System.out.print("\t\t S.no: ");
+                                        priorityChoice = Validation.numberCheck(scanner);
+                                    }
+
+                                    if (priorityChoice < 1 || priorityChoice > DataModel.getIssueStatus().size() - 2) {
+                                        System.out.println("\n\t\t S.no not found!");
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                for (Members members : selectedTask.getAssignedMembers()) {
+                                    if (!members.getName().equalsIgnoreCase(this.getName())) {
+                                        members.getWorkflow().add("Project: " + projectArrayList.get(0).getProjectName() + " :-> " + selectedIssue.getTaskName() + ":-> The Issue Status is changed from " + selectedIssue.getStatus() + " to +" + DataModel.getIssueStatus().get(priorityChoice - 1) + " by " + this.getName() + " on " + formatter.format(date));
+                                        members.getNotification().add("The Issue Status is changed from " + selectedIssue.getStatus() + " to +" + DataModel.getIssueStatus().get(priorityChoice - 1) + " by " + this.getName());
+                                    }
+                                }
+                                selectedIssue.getActivityStream().add("The Issue Status is changed from " + selectedIssue.getStatus() + " to +" + DataModel.getIssueStatus().get(priorityChoice - 1) + " by " + this.getName());
+                                selectedIssue.setStatus(DataModel.getIssueStatus().get(priorityChoice - 1));
+
+                                if (selectedIssue.getStatus().equalsIgnoreCase("Submitted for test")) {
+                                    for (Members members : this.getProjectArrayList().get(0).getTeamMemberArrayList()) {
+                                        if (members.getType().equalsIgnoreCase("Tester")) {
+                                            members.getAssignedTaskArrayList().add(selectedIssue);
+                                            members.getNotification().add("\t\t\tTask -> " + selectedIssue.getTaskName() + " Added for testing!");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        case 2 -> {
+                            System.out.println("\n\t\tCurrent Remainder date : " + selectedIssue.getRemainder());
+                            String deadline;
+                            do {
+                                System.out.print("\t\t\tIssue Remainder (Date format : dd-MM-yyyy) : ");
+                                deadline = scanner.next();
+
+                            } while (!Validation.dateValidation(deadline));
+                            selectedTask.getActivityStream().add("The Issue Remainder is changed from " + selectedIssue.getRemainder() + " to " + deadline + " by " + this.getName());
+                            for (Members members : selectedTask.getAssignedMembers()) {
+                                if (!members.getName().equalsIgnoreCase(this.getName())) {
+                                    members.getNotification().add("The Issue Remainder is changed from " + selectedIssue.getRemainder() + " to " + deadline + " by " + this.getName());
+                                }
+                            }
+                            selectedIssue.setRemainder(deadline);
+                        }
+
+                        default -> System.out.println("\n\tWrong value. Give correct input number!\n");
+                    }
+                }
+            }
+
+            /*else if(ver == 2){
+                this.viewAssignedActivityStream();
+            } else if (ver == 3) {
+                this.viewAssignedComments();
+            }*/
+
+        }
+    }
+
 
 
     // this function is used to show the list of created projects
@@ -4097,6 +4338,12 @@ public class Members {
                 flag++;
             }
 
+            if(DataModel.getTypeOfUser().get(this.type).contains("Update Issues") || DataModel.getTypeOfUser().get(this.type).contains("Update Issues Status")){
+                System.out.println("\t\t\t Enter "+flag+" to View/Update Details of Issues");
+                listOfMethods.put(flag, "View Issues");
+                flag++;
+            }
+
             if(DataModel.getTypeOfUser().get(this.type).contains("Create Milestones")){
                 System.out.println("\t\t\t Enter " + flag + " to Add Milestone To Project");
                 listOfMethods.put(flag, "Create Milestones");
@@ -4230,6 +4477,19 @@ public class Members {
                     case "Delete Tasks" -> {
                         if(DataModel.getTypeOfUser().get(this.type).contains("Delete Tasks")){
                             this.deleteTask();
+                        }
+                        else{
+                            System.out.println("\n\t\t\tSorry! Wrong input");
+                            System.out.println();
+                            DesignModel.printLine();
+                        }
+                    }
+                    case "View Issues" -> {
+                        if(DataModel.getTypeOfUser().get(this.type).contains("Update Issues")){
+                            this.viewAssignedIssue();
+                        }
+                        else if(DataModel.getTypeOfUser().get(this.type).contains("Update Tasks Status")){
+                            this.viewAssignedIssue();
                         }
                         else{
                             System.out.println("\n\t\t\tSorry! Wrong input");
