@@ -648,6 +648,15 @@ public class Members {
         }
         System.out.println("\n\t\tMembers Added to the Project!");
 
+        /*System.out.println("\t\t This user has the role as " + additionMemberArrayList.get(memberChoice-1).getType(). "\t Do you want to change it to : ");
+        i=0;
+        for(String types : DataModel.getTypeOfUser().keySet().stream().toList()){
+            i++;
+            System.out.println("s.no. " + i + "  " + types);
+        }*/
+
+
+
         System.out.println();
         DesignModel.printLine();
 
@@ -3554,9 +3563,9 @@ public class Members {
                         i = 0;
                         for(String string : leftConfigs){
                             i++;
-                            System.out.println("\n\t\t" + i + ". " + string);
+                            System.out.println("\t\t" + i + ". " + string);
                         }
-                        System.out.println("\n\t\t\tEnter -1 to go back");
+                        System.out.println("\t\tEnter -1 to go back");
                         while(true) {
                             int c;
                             do {

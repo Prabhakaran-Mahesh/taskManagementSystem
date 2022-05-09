@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="Add  issue Problen solved">
+    <list default="true" id="51895dd4-6f30-4a72-89e4-079fd1a41554" name="Changes" comment="Add View and Update created">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/objects/Members.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/Members.java" afterDir="false" />
     </list>
@@ -251,7 +251,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651844862632</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Add View and Update created">
+      <created>1652070527867</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1652070527867</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -266,7 +273,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="loginSignup" />
     <MESSAGE value="Project works completed" />
     <MESSAGE value="Task works completed" />
     <MESSAGE value="SubTask and Dashboard works completed" />
@@ -291,6 +297,7 @@
     <MESSAGE value="Sending tasks for test when status is set to submitted for test" />
     <MESSAGE value="Tester Job Completed" />
     <MESSAGE value="Add  issue Problen solved" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add  issue Problen solved" />
+    <MESSAGE value="Add View and Update created" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add View and Update created" />
   </component>
 </project>
