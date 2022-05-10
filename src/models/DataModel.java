@@ -157,28 +157,28 @@ public class DataModel {
         typeOfUser.put("Manager", getConfigurations());
 
         ArrayList<String> teamlead = new ArrayList<>();
-        teamlead.add(getConfigurations().get(3));
-        teamlead.add(getConfigurations().get(4));
-        teamlead.add(getConfigurations().get(5));
-        teamlead.add(getConfigurations().get(6));
-        teamlead.add(getConfigurations().get(7));
-        teamlead.add(getConfigurations().get(8));
-        teamlead.add(getConfigurations().get(9));
-        teamlead.add(getConfigurations().get(11));
-        teamlead.add(getConfigurations().get(12));
+        teamlead.add(getConfigurations().get(3)); // create task
+        teamlead.add(getConfigurations().get(4)); // update "
+        teamlead.add(getConfigurations().get(5)); // update " status
+        teamlead.add(getConfigurations().get(6)); // delete task
+        teamlead.add(getConfigurations().get(7)); // create issue
+        teamlead.add(getConfigurations().get(8)); // update issue
+        teamlead.add(getConfigurations().get(9)); // update " status
+        teamlead.add(getConfigurations().get(11)); // create milestone
+        teamlead.add(getConfigurations().get(12)); // update milestone
         typeOfUser.put("Teamlead", teamlead);
 
         ArrayList<String> tester = new ArrayList<>();
-        tester.add(getConfigurations().get(5));
-        tester.add(getConfigurations().get(7));
-        tester.add(getConfigurations().get(8));
-        tester.add(getConfigurations().get(9));
-        tester.add(getConfigurations().get(10));
+        tester.add(getConfigurations().get(5)); // update task status
+        tester.add(getConfigurations().get(7)); // create issue
+        tester.add(getConfigurations().get(8)); // update issue
+        tester.add(getConfigurations().get(9)); // update issue status
+        tester.add(getConfigurations().get(10)); // test
         typeOfUser.put("Tester", tester);
 
         ArrayList<String> member = new ArrayList<>();
-        member.add(getConfigurations().get(5));
-        member.add(getConfigurations().get(9));
+        member.add(getConfigurations().get(5)); // update task status
+        member.add(getConfigurations().get(9)); // update issue status
         typeOfUser.put("Member", member);
     }
 }

@@ -225,7 +225,6 @@ public class Members {
         oldPassword = scanner.next();
         if(this.getPassword().equals(oldPassword)){
             System.out.print("\t\t\tEnter your New Password : ");
-            //newPassword = String.valueOf(console.readPassword());;
             newPassword = scanner.next();
 
             this.setPassword(newPassword);
@@ -3588,7 +3587,6 @@ public class Members {
                         break;
                     }else{
                         System.out.println("\t\tEnter correct number!");
-                        choices = -1;
                     }
                 }
             }
@@ -4137,7 +4135,7 @@ public class Members {
 
     //  This function is for kanban board by priority
     public void kanbanViewByPriority(){
-        System.out.println("\n\t\tKanban board :");
+        System.out.println("\n\t\tKanban board:");
         for(String status : DataModel.getPriority()){
             System.out.println("\n\t\t\t"+status+"\n");
             for(Project project : getProjectArrayList()){
@@ -4584,4 +4582,16 @@ public class Members {
             }
         }
     }
+
+    /*void sample(){
+        for(Task task : this.getAssignedTaskArrayList()){
+            csv.write("Task", task.getTaskName(), .........);
+            for(Task subtask : task.getSubTask()){
+                csv.write("Subtask", subtask.getTaskName(), ........);
+            }
+            for(Issues issue : task.getAssociatedIssues()){
+                csv.write("Issue", issue.getAssociatedIssues(),.......);
+            }
+        }
+    }*/
 }
